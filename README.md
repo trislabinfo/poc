@@ -1,6 +1,6 @@
-# Datarizen (PoC)
+# PoC
 
-This repository is the proof-of-concept scaffold for **Datarizen**.
+This repository is the proof-of-concept scaffold for **PoC**.
 
 ## Goal
 
