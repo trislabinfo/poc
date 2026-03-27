@@ -1,10 +1,10 @@
 using AntDesign;
 using BuildingBlocks.Web.Extensions;
 using BuildingBlocks.Web.AdminNavigation;
-using ControlPlanClientHost.Components;
 using Tenant.Web;
 using User.Web;
 using Microsoft.Extensions.Hosting;
+using ControlPanel.Client.Host.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 

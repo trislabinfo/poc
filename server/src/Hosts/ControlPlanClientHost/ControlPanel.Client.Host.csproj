@@ -5,20 +5,19 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
-    <!-- Keep stable namespaces/output names even though the .csproj file was renamed. -->
-    <RootNamespace>AppBuilderClientHost</RootNamespace>
-    <AssemblyName>AppBuilderClientHost</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\Api\BuildingBlocks.Api.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\Web\BuildingBlocks.Web.csproj" />
-    <ProjectReference Include="..\..\Product\AppBuilder\AppBuilder.Web\AppBuilder.Web.csproj" />
+    <ProjectReference Include="..\..\Product\Tenant\Tenant.Web\Tenant.Web.csproj" />
+    <ProjectReference Include="..\..\Product\User\User.Web\User.Web.csproj" />
     <ProjectReference Include="..\ServiceDefaults\ServiceDefaults.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- Explicit reference so ServiceDefaults runtime dependencies are present -->
+    <PackageReference Include="AntDesign" />
     <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" />
   </ItemGroup>
 

@@ -22,7 +22,7 @@
     <ProjectReference Include="..\..\Capabilities\FeatureFlags\Capabilities.FeatureFlags.csproj" />
     <ProjectReference Include="..\..\Capabilities\Messaging\Capabilities.Messaging.csproj" />
     <ProjectReference Include="..\..\Capabilities\Logging\Serilog\Capabilities.Logging.csproj" />
-    <ProjectReference Include="..\..\ServiceDefaults\ServiceDefaults.csproj" />
+    <ProjectReference Include="..\ServiceDefaults\ServiceDefaults.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" />
