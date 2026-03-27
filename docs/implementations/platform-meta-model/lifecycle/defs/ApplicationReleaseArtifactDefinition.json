@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/lifecycle/defs/ApplicationReleaseArtifactDefinition.json",
+  "$defs": {
+    "ApplicationReleaseArtifactType": {
+      "type": "string",
+      "enum": ["application", "entity", "page", "navigation", "workflow", "role", "permission", "codeTable", "theme", "dataSource", "breakpoint", "extension"],
+      "description": "Type of definition this artifact row holds. application = app-level (extensionReferences, defaultLocale, supportedLocales, translations); extension = one per in-app extension (extension root: dependsOn, defaultLocale, etc.); others = one row per definition with that type."
+    },
+    "ApplicationReleaseArtifactDefinition": {
+      "type": "object",
+      "description": "One row per piece of an application release. Stored in a separate resource/table from ApplicationReleaseDefinition. Full release snapshot can be assembled on demand. For in-app extensions, use many rows (entity, page, etc.) with extensionId set; one row per extension with artifactType extension for extension root.",
+      "required": ["applicationReleaseId", "artifactType", "definitionId", "snapshot"],
+      "properties": {
+        "applicationReleaseId": {
+          "type": "string",
+          "description": "Application release this artifact belongs to."
+        },
+        "artifactType": { "$ref": "#/$defs/ApplicationReleaseArtifactType" },
+        "definitionId": {
+          "type": "string",
+          "description": "Id of the definition: applicationId for artifactType application; extensionId for artifactType extension; entity id, page id, etc. for other types."
+        },
+        "extensionId": {
+          "type": "string",
+          "description": "Set for artifacts that belong to an in-app extension (extensionDefinitions). Null for app-owned content and for artifactType application or extension."
+        },
+        "snapshot": {
+          "type": "object",
+          "description": "The definition JSON. Validates against the corresponding application meta model definition (EntityDefinition, PageDefinition, etc.) or application-level / extension-level shape."
+        }
+      }
+    }
+  }
+}

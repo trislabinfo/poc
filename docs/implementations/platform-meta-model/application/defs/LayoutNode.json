@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/defs/LayoutNode.json",
+  "$defs": {
+    "LayoutNode": {
+      "oneOf": [
+        { "$ref": "#/$defs/StructuralLayoutNode" },
+        { "$ref": "#/$defs/DataBoundLayoutNode" }
+      ],
+      "description": "Layout node: structural (Section, Row, Tabs, Tab) or data-bound (Field, DataTable with optional dataSourceId/operationId)."
+    },
+    "StructuralLayoutNode": {
+      "oneOf": [
+        { "$ref": "#/$defs/SectionNode" },
+        { "$ref": "#/$defs/RowNode" },
+        { "$ref": "#/$defs/TabsNode" },
+        { "$ref": "#/$defs/TabNode" }
+      ],
+      "description": "Layout-only nodes: Section, Row, Tabs, Tab. No data source; each type has explicit properties."
+    },
+    "SectionNode": {
+      "type": "object",
+      "description": "Section container; explicit properties only.",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["Section"] },
+        "title": { "type": "string", "description": "Section heading." },
+        "collapsible": { "type": "boolean" },
+        "defaultCollapsed": { "type": "boolean" },
+        "visibleFrom": { "type": "string", "description": "Breakpoint id; node visible when viewport >= this breakpoint." },
+        "hiddenFrom": { "type": "string", "description": "Breakpoint id; node hidden when viewport >= this breakpoint." },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/LayoutNode" }
+        }
+      }
+    },
+    "RowNode": {
+      "type": "object",
+      "description": "Row container; explicit properties only.",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["Row"] },
+        "columns": { "type": "integer", "description": "Number of columns or column layout." },
+        "gap": { "type": ["string", "number"], "description": "Spacing between items." },
+        "visibleFrom": { "type": "string", "description": "Breakpoint id; node visible when viewport >= this breakpoint." },
+        "hiddenFrom": { "type": "string", "description": "Breakpoint id; node hidden when viewport >= this breakpoint." },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/LayoutNode" }
+        }
+      }
+    },
+    "TabsNode": {
+      "type": "object",
+      "description": "Tabs container; explicit properties only.",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["Tabs"] },
+        "orientation": { "type": "string", "enum": ["top", "left", "right", "bottom"] },
+        "visibleFrom": { "type": "string", "description": "Breakpoint id; node visible when viewport >= this breakpoint." },
+        "hiddenFrom": { "type": "string", "description": "Breakpoint id; node hidden when viewport >= this breakpoint." },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/LayoutNode" }
+        }
+      }
+    },
+    "TabNode": {
+      "type": "object",
+      "description": "Single tab; explicit properties only.",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["Tab"] },
+        "title": { "type": "string", "description": "Tab label." },
+        "icon": { "type": "string" },
+        "visibleFrom": { "type": "string", "description": "Breakpoint id; node visible when viewport >= this breakpoint." },
+        "hiddenFrom": { "type": "string", "description": "Breakpoint id; node hidden when viewport >= this breakpoint." },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/LayoutNode" }
+        }
+      }
+    },
+    "DataBoundLayoutNode": {
+      "oneOf": [
+        { "$ref": "#/$defs/FieldNode" },
+        { "$ref": "#/$defs/DataTableNode" }
+      ],
+      "description": "Field or DataTable; each type has explicit properties; may reference dataSourceId/operationId."
+    },
+    "FieldNode": {
+      "oneOf": [
+        { "$ref": "#/$defs/FieldNodeInput" },
+        { "$ref": "#/$defs/FieldNodeAutocomplete" }
+      ],
+      "description": "Field: either a basic input (no data source) or Autocomplete (requires data source)."
+    },
+    "FieldNodeInput": {
+      "type": "object",
+      "description": "Field with basic HTML-style input; no data source. When required is omitted, runtime derives from entity property.",
+      "required": ["id", "type", "field", "componentId"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["Field"] },
+        "field": { "type": "string", "description": "Entity property name." },
+        "componentId": {
+          "type": "string",
+          "enum": ["TextInput", "NumberInput", "DatePicker", "Checkbox", "TextArea", "Select"],
+          "description": "Basic input components; do not use a data source."
+        },
+        "required": { "type": "boolean", "description": "When true, field is mandatory on this form; when omitted, derive from entity property." },
+        "label": { "type": "string", "description": "Fallback label when labelKey not used or missing translation." },
+        "labelKey": { "type": "string", "description": "Translation key for label (e.g. field.firstName.label)." },
+        "placeholder": { "type": "string", "description": "Fallback placeholder when placeholderKey not used." },
+        "placeholderKey": { "type": "string", "description": "Translation key for placeholder." },
+        "helpKey": { "type": "string", "description": "Translation key for help text." },
+        "readonly": { "type": "boolean" },
+        "validation": {
+          "type": "array",
+          "items": { "$ref": "ValidationRuleDefinition.json#/$defs/ValidationRuleDefinition" },
+          "description": "Form-level validation rules for this field (in addition to entity property validation)."
+        },
+        "dateFormat": {
+          "type": "string",
+          "enum": ["short", "medium", "long"],
+          "description": "Hint for date display/input; runtime resolves with locale. Use with DatePicker."
+        },
+        "numberFormat": {
+          "type": "string",
+          "enum": ["integer", "decimal", "currency", "percent"],
+          "description": "Hint for number display/input; runtime resolves with locale. Use with NumberInput."
+        },
+        "visibleFrom": { "type": "string", "description": "Breakpoint id; node visible when viewport >= this breakpoint." },
+        "hiddenFrom": { "type": "string", "description": "Breakpoint id; node hidden when viewport >= this breakpoint." },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/LayoutNode" }
+        }
+      }
+    },
+    "FieldNodeAutocomplete": {
+      "type": "object",
+      "description": "Field with Autocomplete component; requires a data source operation. When required is omitted, runtime derives from entity property.",
+      "required": ["id", "type", "field", "componentId", "dataSourceId", "operationId"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["Field"] },
+        "field": { "type": "string", "description": "Entity property name." },
+        "componentId": { "type": "string", "enum": ["Autocomplete"], "description": "Autocomplete requires dataSourceId and operationId." },
+        "dataSourceId": { "type": "string", "description": "Data source that provides options." },
+        "operationId": { "type": "string", "description": "Operation (e.g. list or autocomplete-search) on that data source." },
+        "required": { "type": "boolean", "description": "When true, field is mandatory on this form; when omitted, derive from entity property." },
+        "label": { "type": "string", "description": "Fallback label when labelKey not used or missing translation." },
+        "labelKey": { "type": "string", "description": "Translation key for label." },
+        "placeholder": { "type": "string", "description": "Fallback placeholder when placeholderKey not used." },
+        "placeholderKey": { "type": "string", "description": "Translation key for placeholder." },
+        "helpKey": { "type": "string", "description": "Translation key for help text." },
+        "readonly": { "type": "boolean" },
+        "validation": {
+          "type": "array",
+          "items": { "$ref": "ValidationRuleDefinition.json#/$defs/ValidationRuleDefinition" },
+          "description": "Form-level validation rules for this field (in addition to entity property validation)."
+        },
+        "visibleFrom": { "type": "string", "description": "Breakpoint id; node visible when viewport >= this breakpoint." },
+        "hiddenFrom": { "type": "string", "description": "Breakpoint id; node hidden when viewport >= this breakpoint." },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/LayoutNode" }
+        }
+      }
+    },
+    "DataTableNode": {
+      "type": "object",
+      "description": "Data table (entity relation or data-source-backed); explicit properties only.",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["DataTable"] },
+        "field": { "type": "string", "description": "Entity relation property when bound to entity (e.g. list of related records)." },
+        "dataSourceId": { "type": "string" },
+        "operationId": { "type": "string" },
+        "column": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "field": { "type": "string" },
+              "label": { "type": "string" },
+              "width": { "type": ["string", "number"] }
+            }
+          }
+        },
+        "pageSize": { "type": "integer", "minimum": 1 },
+        "visibleFrom": { "type": "string", "description": "Breakpoint id; node visible when viewport >= this breakpoint." },
+        "hiddenFrom": { "type": "string", "description": "Breakpoint id; node hidden when viewport >= this breakpoint." },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/LayoutNode" }
+        }
+      }
+    },
+    "ListConfig": {
+      "type": "object",
+      "properties": {
+        "columns": { "type": "array", "items": { "type": "string" } },
+        "filterFields": { "type": "array", "items": { "type": "string" } },
+        "quickSearchFields": { "type": "array", "items": { "type": "string" } },
+        "defaultSort": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["field", "direction"],
+            "properties": {
+              "field": { "type": "string" },
+              "direction": { "type": "string", "enum": ["asc", "desc"] }
+            }
+          }
+        },
+        "pageSize": { "type": "integer", "minimum": 1, "default": 25 }
+      }
+    },
+    "FieldOverride": {
+      "type": "object",
+      "required": ["field"],
+      "properties": {
+        "field": { "type": "string" },
+        "readonly": { "type": "string", "description": "Expression for readonly at runtime." },
+        "visible": { "type": "string", "description": "Expression for visibility at runtime." },
+        "default": {}
+      }
+    }
+  }
+}

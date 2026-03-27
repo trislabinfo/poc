@@ -1,0 +1,98 @@
+@page "/admin/users/add-edit"
+
+@using System.ComponentModel.DataAnnotations
+@using User.Web.Models
+
+<PageTitle>Users - Add/Edit</PageTitle>
+
+<div class="cp-page">
+    <div class="cp-card">
+        <h2 class="cp-card-title">Add / Edit User</h2>
+        <p class="cp-card-subtitle cp-text-muted">
+            UI placeholder (User API does not yet expose create/update endpoints).
+        </p>
+
+        <EditForm Model="_model" OnValidSubmit="OnValidSubmitAsync" FormName="upsert-user">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="cp-form">
+                <div class="cp-form-grid">
+                    <div class="cp-field">
+                        <label class="cp-label">First name</label>
+                        <Input @bind-Value="_model.FirstName" Placeholder="First name" />
+                        <ValidationMessage For="@(() => _model.FirstName)" />
+                    </div>
+
+                    <div class="cp-field">
+                        <label class="cp-label">Last name</label>
+                        <Input @bind-Value="_model.LastName" Placeholder="Last name" />
+                        <ValidationMessage For="@(() => _model.LastName)" />
+                    </div>
+
+                    <div class="cp-field" style="grid-column: 1 / -1;">
+                        <label class="cp-label">Email</label>
+                        <Input @bind-Value="_model.Email" Placeholder="Email address" />
+                        <ValidationMessage For="@(() => _model.Email)" />
+                    </div>
+                </div>
+
+                <div class="cp-actions">
+                    <Button Type="ButtonType.Primary"
+                            HtmlType="submit"
+                            Disabled="_isSubmitting"
+                            Loading="_isSubmitting">
+                        @_isSubmitting ? "Saving..." : "Save"
+                    </Button>
+                </div>
+            </div>
+        </EditForm>
+
+        @if (!string.IsNullOrWhiteSpace(_message))
+        {
+            <div class="cp-alert" role="alert" aria-live="polite">
+                @_message
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private readonly UserUpsertModel _model = new();
+    private string? _message;
+    private bool _isSubmitting;
+
+    private async Task OnValidSubmitAsync()
+    {
+        if (_isSubmitting)
+            return;
+
+        _isSubmitting = true;
+        _message = null;
+
+        try
+        {
+            // TODO: Wire to User.Api create/update endpoints once available.
+            await Task.Delay(300);
+            _message = "User upsert is not implemented yet.";
+        }
+        finally
+        {
+            _isSubmitting = false;
+        }
+    }
+
+    private sealed class UserUpsertModel
+    {
+        [Required]
+        public string FirstName { get; set; } = string.Empty;
+
+        [Required]
+        public string LastName { get; set; } = string.Empty;
+
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = string.Empty;
+    }
+}
+

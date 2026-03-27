@@ -1,0 +1,54 @@
+---
+apiVersion: "apps/v1"
+kind: "StatefulSet"
+metadata:
+  name: "dr-development-cache-statefulset"
+  labels:
+    app.kubernetes.io/name: "datarizen"
+    app.kubernetes.io/component: "dr-development-cache"
+    app.kubernetes.io/instance: "{{.Release.Name}}"
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "datarizen"
+        app.kubernetes.io/component: "dr-development-cache"
+        app.kubernetes.io/instance: "{{.Release.Name}}"
+    spec:
+      containers:
+        - command:
+            - "/bin/sh"
+          image: "docker.io/library/redis:7.4-alpine"
+          name: "dr-development-cache"
+          envFrom:
+            - secretRef:
+                name: "dr-development-cache-secrets"
+          args:
+            - "redis-server"
+            - "--requirepass"
+            - "$REDIS_PASSWORD"
+            - "--save"
+            - "60"
+            - "1"
+          ports:
+            - name: "tcp"
+              protocol: "TCP"
+              containerPort: 6379
+          volumeMounts:
+            - name: "dr-development-cache"
+              mountPath: "/data"
+          imagePullPolicy: "IfNotPresent"
+      volumes:
+        - name: "dr-development-cache"
+          emptyDir: {}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "datarizen"
+      app.kubernetes.io/component: "dr-development-cache"
+      app.kubernetes.io/instance: "{{.Release.Name}}"
+  replicas: 1
+  persistentVolumeClaimRetentionPolicy: {}
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 0
+    type: "RollingUpdate"

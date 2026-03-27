@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/defs/WorkflowDefinition.json",
+  "$defs": {
+    "WorkflowTaskDefinition": {
+      "type": "object",
+      "description": "Single task in a workflow. Backend enforces requiredFields when completing this task or when transitioning out.",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "type": "string", "description": "Task identifier; referenced in sequenceFlows from/to." },
+        "type": {
+          "type": "string",
+          "enum": ["userTask", "updateField", "createEntity", "sendNotification", "customAction"],
+          "description": "Task kind. userTask: human step; others: system actions."
+        },
+        "requiredFields": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Entity property names that must be set before this task can complete or before any outgoing transition. Enforced by backend; allows non-mandatory entity properties to be mandatory in this step."
+        },
+        "config": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Task-type-specific parameters (e.g. field name for updateField, template for sendNotification)."
+        }
+      }
+    },
+    "WorkflowSequenceFlowDefinition": {
+      "type": "object",
+      "description": "Flow between two tasks. Condition is evaluated by backend before allowing transition.",
+      "required": ["from", "to"],
+      "properties": {
+        "from": { "type": "string", "description": "Source task id." },
+        "to": { "type": "string", "description": "Target task id." },
+        "condition": { "type": "string", "description": "Optional expression (e.g. entity.approvalNotes != null); when false, transition is refused." }
+      }
+    },
+    "WorkflowDefinition": {
+      "type": "object",
+      "description": "Workflow definition; defined only inside application definition. BPMN-aligned: startEvent, tasks, sequenceFlows.",
+      "required": ["id", "entity", "startEvent", "tasks"],
+      "properties": {
+        "id": { "type": "string" },
+        "entity": { "type": "string", "description": "Entity id this workflow is bound to." },
+        "tenantId": { "type": "string" },
+        "startEvent": {
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": { "type": "string", "enum": ["onCreate", "onUpdate", "onDelete", "manual", "timer"] }
+          }
+        },
+        "tasks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/WorkflowTaskDefinition" },
+          "description": "Workflow tasks; each has id, type, optional requiredFields and config."
+        },
+        "sequenceFlows": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/WorkflowSequenceFlowDefinition" },
+          "description": "Transitions between tasks; condition evaluated before allowing transition."
+        }
+      }
+    }
+  }
+}

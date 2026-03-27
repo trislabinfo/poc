@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/lifecycle/defs/TenantApplicationReleaseArtifactDefinition.json",
+  "$defs": {
+    "TenantApplicationReleaseArtifactType": {
+      "type": "string",
+      "enum": ["application", "entity", "page", "navigation", "workflow", "role", "permission", "codeTable", "theme", "dataSource", "breakpoint", "extension"],
+      "description": "Same set as ApplicationReleaseArtifactType. Each row holds the effective definition (base + tenant overrides merged)."
+    },
+    "TenantApplicationReleaseArtifactDefinition": {
+      "type": "object",
+      "description": "One row per piece of the effective tenant application release. Stored in a separate resource/table from TenantApplicationReleaseDefinition. Built by copying app release artifacts and referenced extension release artifacts, then merging tenant overrides; all content for this tenant app release lives here for co-location and caching.",
+      "required": ["tenantApplicationReleaseId", "artifactType", "definitionId", "snapshot"],
+      "properties": {
+        "tenantApplicationReleaseId": {
+          "type": "string",
+          "description": "Tenant application release this artifact belongs to."
+        },
+        "artifactType": { "$ref": "#/$defs/TenantApplicationReleaseArtifactType" },
+        "definitionId": {
+          "type": "string",
+          "description": "Id of the definition: applicationId for artifactType application; extensionId for artifactType extension; entity id, page id, etc. for other types."
+        },
+        "extensionId": {
+          "type": "string",
+          "description": "Set for content that came from an extension (namespaced). Null for app-owned content and for artifactType application or extension."
+        },
+        "snapshot": {
+          "type": "object",
+          "description": "The effective definition JSON (base + tenant overrides merged). Validates against the application meta model."
+        }
+      }
+    }
+  }
+}

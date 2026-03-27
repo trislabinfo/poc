@@ -1,0 +1,99 @@
+@using BuildingBlocks.Web.AdminNavigation
+@using System.Linq
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components
+@implements IDisposable
+
+@inject IEnumerable<IAdminNavigationProvider> NavigationProviders
+@inject NavigationManager NavigationManager
+
+@code
+{
+    private IReadOnlyList<AdminNavItem> NavigationItems { get; set; } = Array.Empty<AdminNavItem>();
+
+    protected override void OnInitialized()
+    {
+        NavigationItems = NavigationProviders
+            .SelectMany(p => p.GetNavigationItems())
+            .ToArray();
+    }
+
+    public void Dispose()
+    {
+        // No-op: we intentionally don't keep dynamic menu open/selected state in this component.
+    }
+
+    private AdminNavItem? DashboardNode =>
+        NavigationItems.FirstOrDefault(i => string.Equals(i.Key, "dashboard", StringComparison.Ordinal));
+
+    private AdminNavItem? UsersNode =>
+        NavigationItems.FirstOrDefault(i => string.Equals(i.Key, "users", StringComparison.Ordinal));
+
+    private AdminNavItem? TenantsNode =>
+        NavigationItems.FirstOrDefault(i => string.Equals(i.Key, "tenants", StringComparison.Ordinal));
+
+    private IReadOnlyList<AdminNavItem> UsersChildren =>
+        NavigationItems
+            .Where(i =>
+                string.Equals(i.ParentKey, "users", StringComparison.Ordinal) ||
+                string.Equals(i.Key, "users-search", StringComparison.Ordinal) ||
+                string.Equals(i.Key, "users-add-edit", StringComparison.Ordinal))
+            .OrderBy(i => i.Order)
+            .ToArray();
+
+    private IReadOnlyList<AdminNavItem> TenantsChildren =>
+        NavigationItems
+            .Where(i =>
+                string.Equals(i.ParentKey, "tenants", StringComparison.Ordinal) ||
+                string.Equals(i.Key, "tenants-search", StringComparison.Ordinal) ||
+                string.Equals(i.Key, "tenants-add-edit", StringComparison.Ordinal))
+            .OrderBy(i => i.Order)
+            .ToArray();
+
+    private Task NavigateToAsync(string href)
+    {
+        NavigationManager.NavigateTo(href);
+        return Task.CompletedTask;
+    }
+}
+
+<aside class="cp-sidebar">
+    <nav class="cp-nav" aria-label="Admin navigation">
+        <div class="cp-nav-title">@((DashboardNode?.Title) ?? "Dashboard")</div>
+        <Menu Theme="MenuTheme.Dark"
+              Mode="MenuMode.Inline"
+              Style="background: transparent; border-right: none;">
+            @if (DashboardNode is not null)
+            {
+                <SubMenu Key="dashboard" Title="@DashboardNode.Title" IsOpen="true">
+                    <SubMenu Key="users" Title="@(UsersNode?.Title ?? "Users")" IsOpen="true">
+                        @foreach (var child in UsersChildren)
+                        {
+                            <MenuItem Key="@child.Key" OnClick="@(() => NavigateToAsync(child.Href))">
+                                @child.Title
+                            </MenuItem>
+                        }
+                    </SubMenu>
+
+                    <SubMenu Key="tenants" Title="@(TenantsNode?.Title ?? "Tenants")" IsOpen="true">
+                        @foreach (var child in TenantsChildren)
+                        {
+                            <MenuItem Key="@child.Key" OnClick="@(() => NavigateToAsync(child.Href))">
+                                @child.Title
+                            </MenuItem>
+                        }
+                    </SubMenu>
+                </SubMenu>
+            }
+            else
+            {
+                // Fallback: render whatever root items exist.
+                @foreach (var root in NavigationItems.Where(i => string.IsNullOrWhiteSpace(i.ParentKey)).OrderBy(i => i.Order))
+                {
+                    <MenuItem Key="@root.Key" OnClick="@(() => NavigateToAsync(root.Href))">@root.Title</MenuItem>
+                }
+            }
+        </Menu>
+    </nav>
+</aside>
+

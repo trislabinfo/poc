@@ -1,0 +1,47 @@
+---
+apiVersion: "apps/v1"
+kind: "StatefulSet"
+metadata:
+  name: "dr-development-db-statefulset"
+  labels:
+    app.kubernetes.io/name: "datarizen"
+    app.kubernetes.io/component: "dr-development-db"
+    app.kubernetes.io/instance: "{{.Release.Name}}"
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "datarizen"
+        app.kubernetes.io/component: "dr-development-db"
+        app.kubernetes.io/instance: "{{.Release.Name}}"
+    spec:
+      containers:
+        - image: "docker.io/library/postgres:16.6-alpine"
+          name: "dr-development-db"
+          envFrom:
+            - configMapRef:
+                name: "dr-development-db-config"
+            - secretRef:
+                name: "dr-development-db-secrets"
+          ports:
+            - name: "tcp"
+              protocol: "TCP"
+              containerPort: 5432
+          volumeMounts:
+            - name: "dr-development-db"
+              mountPath: "/var/lib/postgresql/data"
+          imagePullPolicy: "IfNotPresent"
+      volumes:
+        - name: "dr-development-db"
+          emptyDir: {}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "datarizen"
+      app.kubernetes.io/component: "dr-development-db"
+      app.kubernetes.io/instance: "{{.Release.Name}}"
+  replicas: 1
+  persistentVolumeClaimRetentionPolicy: {}
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 0
+    type: "RollingUpdate"

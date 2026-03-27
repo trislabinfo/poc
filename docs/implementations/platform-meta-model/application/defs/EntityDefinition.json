@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/defs/EntityDefinition.json",
+  "$defs": {
+    "EntityDefinition": {
+      "type": "object",
+      "description": "Entity definition (business object). Contains property definitions and relation definitions.",
+      "required": ["id", "displayName", "tenantScoped"],
+      "properties": {
+        "id": { "type": "string", "description": "Unique entity identifier." },
+        "displayName": { "type": "string", "description": "Human-readable name." },
+        "tenantScoped": { "type": "boolean", "description": "Whether the entity is tenant-specific." },
+        "properties": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/PropertyDefinition" },
+          "description": "Property definitions (defined under entity definition).",
+          "default": []
+        },
+        "relations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/RelationDefinition" },
+          "description": "Relation definitions (defined under entity definition).",
+          "default": []
+        },
+        "calculatedFields": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/CalculatedFieldDefinition" },
+          "default": []
+        }
+      }
+    },
+    "PropertyDefinition": {
+      "type": "object",
+      "description": "Property definition; defined under entity definition.",
+      "required": ["name", "type"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": ["string", "uuid", "int", "decimal", "datetime", "boolean", "relation", "binary"]
+        },
+        "required": { "type": "boolean", "default": false },
+        "readonly": { "type": "boolean", "default": false },
+        "default": {},
+        "length": { "type": "integer", "minimum": 1 },
+        "precision": { "type": "integer", "minimum": 1 },
+        "scale": { "type": "integer", "minimum": 0 },
+        "expression": { "type": "string", "description": "Expression for calculated value." },
+        "persist": { "type": "boolean", "description": "Whether calculated value is stored in DB.", "default": false },
+        "validation": {
+          "type": "array",
+          "items": { "$ref": "ValidationRuleDefinition.json#/$defs/ValidationRuleDefinition" },
+          "description": "Validation rules for this property; applied when property is edited in forms."
+        }
+      }
+    },
+    "RelationDefinition": {
+      "type": "object",
+      "description": "Relation definition; defined under entity definition.",
+      "required": ["name", "type", "target"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": ["one-to-one", "one-to-many", "many-to-one", "many-to-many"]
+        },
+        "target": { "type": "string", "description": "Target entity ID." },
+        "inverse": { "type": "string", "description": "Property name in target entity that references back." },
+        "required": { "type": "boolean", "default": false },
+        "tenantScoped": { "type": "boolean", "default": true }
+      }
+    },
+    "CalculatedFieldDefinition": {
+      "type": "object",
+      "required": ["name", "type", "expression"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["string", "int", "long", "decimal", "date", "datetime", "boolean"] },
+        "expression": { "type": "string" },
+        "persist": { "type": "boolean", "default": true }
+      }
+    }
+  }
+}

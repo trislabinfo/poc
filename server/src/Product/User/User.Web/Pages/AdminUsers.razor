@@ -1,0 +1,76 @@
+@page "/admin/users/search"
+
+@using User.Web.Clients
+@using User.Web.Models
+@inject IUserApiClient UserApiClient
+
+<PageTitle>Users - Search</PageTitle>
+
+<div class="cp-page">
+    <div class="cp-card">
+        <h2 class="cp-card-title">Users</h2>
+        <p class="cp-card-subtitle cp-text-muted">
+            Search and browse users (from <code>User.Web</code>).
+        </p>
+
+        @if (_isLoading)
+        {
+            <div class="cp-alert" role="status" aria-live="polite">Loading users...</div>
+        }
+        else if (!string.IsNullOrWhiteSpace(_message))
+        {
+            <div class="cp-alert" role="alert" aria-live="polite">@_message</div>
+        }
+        else if (_users.Count == 0)
+        {
+            <div class="cp-alert" role="status" aria-live="polite">No users found.</div>
+        }
+        else
+        {
+            <Table TItem="UserDto"
+                   DataSource="_users"
+                   Bordered="true"
+                   HidePagination="true"
+                   Loading="_isLoading">
+                <PropertyColumn Title="Id" Property="u => u.Id" />
+                <PropertyColumn Title="Email" Property="u => u.Email" />
+                <PropertyColumn Title="First name" Property="u => u.FirstName" />
+                <PropertyColumn Title="Last name" Property="u => u.LastName" />
+            </Table>
+        }
+    </div>
+</div>
+
+@code
+{
+    private IReadOnlyList<UserDto> _users = Array.Empty<UserDto>();
+    private string? _message;
+    private bool _isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isLoading = true;
+        _message = null;
+        _users = Array.Empty<UserDto>();
+
+        try
+        {
+            var result = await UserApiClient.GetAllUsersAsync();
+            if (!result.IsSuccess)
+            {
+                _message = $"User search failed ({result.StatusCode}): {result.ErrorMessage}";
+                return;
+            }
+
+            _users = result.Data ?? Array.Empty<UserDto>();
+        }
+        catch (Exception ex)
+        {
+            _message = $"User search error: {ex.Message}";
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/lifecycle/defs/ExtensionReleaseDefinition.json",
+  "$defs": {
+    "ResolvedExtensionDependency": {
+      "type": "object",
+      "description": "Resolved extension dependency at release time; stored in extension release.",
+      "required": ["extensionId", "version"],
+      "properties": {
+        "extensionId": { "type": "string" },
+        "version": { "$ref": "../../Common/SemanticVersionDefinition.json#/$defs/SemanticVersion" }
+      }
+    },
+    "ExtensionReleaseDefinition": {
+      "allOf": [
+        { "$ref": "../../Common/AuditDefinition.json#/$defs/AuditDefinition" },
+        {
+          "type": "object",
+          "description": "Immutable extension release. Release metadata only; content is stored as ExtensionReleaseArtifactDefinition rows (one per entity, page, navigation, etc.). Full snapshot can be assembled on demand. Created when releasing extensions from an application and added to the extension catalog.",
+          "required": ["id", "extensionId", "version", "validationStatus", "createdBy", "createdAt"],
+          "properties": {
+            "id": { "type": "string", "description": "Unique extension release identifier." },
+            "extensionId": { "type": "string", "description": "Extension this release belongs to." },
+            "version": { "$ref": "../../Common/SemanticVersionDefinition.json#/$defs/SemanticVersion" },
+            "validationStatus": {
+              "type": "string",
+              "enum": ["Pending", "Valid", "Invalid"],
+              "description": "Validation result of the snapshot."
+            },
+            "resolvedDependencyVersions": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/ResolvedExtensionDependency" },
+              "description": "Resolved versions of extensions in dependsOn for this release."
+            },
+            "domainModel": {
+              "$ref": "../../Common/DomainModelDefinition.json#/$defs/DomainModelDefinition",
+              "description": "Optional DDD aggregate version for optimistic concurrency."
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+@namespace Layout
+@using BuildingBlocks.Web.AdminNavigation
+@using System.Linq
+@using Microsoft.AspNetCore.Components.Routing
+
+@inject IEnumerable<IAdminNavigationProvider> NavigationProviders
+
+@code
+{
+    private IReadOnlyList<AdminNavItem> NavigationItems { get; set; } = Array.Empty<AdminNavItem>();
+
+    protected override void OnInitialized()
+    {
+        NavigationItems = NavigationProviders
+            .SelectMany(p => p.GetNavigationItems())
+            .OrderBy(i => i.Order)
+            .ToArray();
+    }
+}
+
+<aside class="cp-sidebar">
+    <nav class="cp-nav" aria-label="App builder navigation">
+        <div class="cp-nav-title">App Builder</div>
+        <ul class="cp-nav-list">
+            @foreach (var item in NavigationItems)
+            {
+                <li class="cp-nav-item">
+                    <NavLink class="cp-nav-link" href="@item.Href">
+                        <span class="cp-nav-link-text">@item.Title</span>
+                    </NavLink>
+                </li>
+            }
+        </ul>
+    </nav>
+</aside>
+

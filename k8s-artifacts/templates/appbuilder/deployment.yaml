@@ -1,0 +1,45 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "appbuilder-deployment"
+  labels:
+    app.kubernetes.io/name: "datarizen"
+    app.kubernetes.io/component: "appbuilder"
+    app.kubernetes.io/instance: "{{.Release.Name}}"
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "datarizen"
+        app.kubernetes.io/component: "appbuilder"
+        app.kubernetes.io/instance: "{{.Release.Name}}"
+    spec:
+      containers:
+        - image: "{{ .Values.parameters.appbuilder.appbuilder_image }}"
+          name: "appbuilder"
+          envFrom:
+            - configMapRef:
+                name: "appbuilder-config"
+            - secretRef:
+                name: "appbuilder-secrets"
+          ports:
+            - name: "appbldr-http"
+              protocol: "TCP"
+              containerPort: 61022
+            - name: "appbldr-https"
+              protocol: "TCP"
+              containerPort: 61021
+          imagePullPolicy: "IfNotPresent"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "datarizen"
+      app.kubernetes.io/component: "appbuilder"
+      app.kubernetes.io/instance: "{{.Release.Name}}"
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: "RollingUpdate"

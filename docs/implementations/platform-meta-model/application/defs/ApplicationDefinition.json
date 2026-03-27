@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/defs/ApplicationDefinition.json",
+  "$defs": {
+    "ApplicationDefinition": {
+      "allOf": [
+        { "$ref": "CommonPropertiesDefinition.json#/$defs/CommonPropertiesDefinition" },
+        { "$ref": "../../Common/AuditDefinition.json#/$defs/AuditDefinition" },
+        {
+          "type": "object",
+          "description": "Application definition (root container). Contains entities and other definitions.",
+          "required": ["id", "name", "version", "multiTenant", "createdBy", "createdAt"],
+          "properties": {
+            "id": { "type": "string", "description": "Unique identifier for the app." },
+            "name": { "type": "string", "description": "Human-readable name." },
+            "version": { "$ref": "../../Common/SemanticVersionDefinition.json#/$defs/SemanticVersion" },
+            "multiTenant": { "type": "boolean", "description": "Whether the app supports multi-tenancy." },
+            "domainModel": {
+              "$ref": "../../Common/DomainModelDefinition.json#/$defs/DomainModelDefinition",
+              "description": "Optional DDD aggregate version for optimistic concurrency."
+            },
+            "extensionDefinitions": {
+              "type": "array",
+              "items": { "$ref": "ExtensionDefinition.json#/$defs/ExtensionDefinition" },
+              "description": "Extensions authored in this application; released from the application and added to the extension catalog for use by other applications."
+            },
+            "extensionReferences": {
+              "type": "array",
+              "items": { "$ref": "ExtensionReference.json#/$defs/ExtensionReference" },
+              "description": "References to extensions from the extension catalog. Resolved at load time; content merged with namespacing (extensionId.id)."
+            },
+            "themes": {
+              "type": "array",
+              "items": { "$ref": "ThemeDefinition.json#/$defs/ThemeDefinition" },
+              "description": "Theme definitions."
+            },
+            "breakpoint": {
+              "type": "array",
+              "items": { "$ref": "BreakpointDefinition.json#/$defs/BreakpointDefinition" },
+              "description": "Optional. When present, overrides platform-level breakpoints for this application; layout nodes reference these ids (visibleFrom, hiddenFrom)."
+            }
+          }
+        }
+      ]
+    }
+  }
+}

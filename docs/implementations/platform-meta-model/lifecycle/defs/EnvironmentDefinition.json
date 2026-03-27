@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/lifecycle/defs/EnvironmentDefinition.json",
+  "$defs": {
+    "EnvironmentDefinition": {
+      "type": "object",
+      "description": "Tenant application environment (e.g. dev, staging, prod). Holds environment-specific config for deployment.",
+      "required": ["id", "name", "type"],
+      "properties": {
+        "id": { "type": "string", "description": "Unique environment identifier." },
+        "tenantApplicationId": {
+          "type": "string",
+          "description": "Tenant application this environment belongs to (optional if environment is tenant-scoped only)."
+        },
+        "name": { "type": "string", "description": "Display name." },
+        "type": {
+          "type": "string",
+          "enum": ["dev", "staging", "prod"],
+          "description": "Environment type."
+        },
+        "config": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Environment-specific config: connection strings, base URLs, feature flags, etc."
+        }
+      }
+    }
+  }
+}

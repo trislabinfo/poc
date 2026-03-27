@@ -1,0 +1,403 @@
+1. Application Definition (Authoring JSON)
+
+The Authoring JSON is the editable application definition created by users in the no-code builder. It contains all metadata required for entities, pages, workflows, navigation, roles, permissions, layout, and components.
+
+1.1 Application Metadata
+Field	Type	Description
+id	string	Unique identifier for the app
+name	string	Human-readable name
+version	string	Semantic version, e.g., "1.0.0"
+multiTenant	boolean	Whether the app supports multi-tenancy
+defaultTenantId	string (optional)	Default tenant ID if single-tenant
+createdBy	string	User ID who created the app
+createdAt	datetime	Timestamp
+1.2 Entity Definition
+Entity
+ ├── id: string                 // Unique entity name
+ ├── displayName: string        // Human-readable name
+ ├── tenantScoped: boolean      // Whether the entity is tenant-specific
+ ├── properties: Property[]
+ ├── relations: Relation[]
+ └── calculatedFields: CalculatedField[]
+1.2.1 Property Definition
+Field	Type	Description
+name	string	Unique property name
+type	string	"string"
+required	boolean	Whether value is mandatory
+readonly	boolean	Always read-only
+default	any	Default value
+length	int	For string fields, max length
+precision	int	For decimal fields
+scale	int	For decimal fields
+expression	string	Optional: expression for calculated value
+persist	boolean	Whether calculated field is stored in DB
+1.2.2 Relation Definition
+Field	Type	Description
+name	string	Relation name
+type	string	"one-to-one", "one-to-many", "many-to-one", "many-to-many"
+target	string	Target entity ID
+inverse	string	Property name in target entity that references back
+required	boolean	Whether relation is mandatory
+tenantScoped	boolean	If relation respects tenantId
+1.2.3 Calculated Field Example
+{
+  "name": "totalAmount",
+  "type": "decimal",
+  "calculated": true,
+  "expression": "entity.amount + entity.tax",
+  "persist": true
+}
+1.3 Persistence Definition
+Field	Type	Description
+databaseProvider	string	e.g., "postgres"
+namingStrategy	string	e.g., "snake_case"
+entities	array	List of entity persistence definitions
+1.3.1 Entity Persistence
+Field	Type	Description
+entity	string	Entity ID
+tableName	string	Database table name
+indexes	array	List of indexes (properties + unique flag)
+properties	array	DB-level type overrides
+1.4 Page Definition
+Page
+ ├── id: string
+ ├── type: string ("EntityList" | "EntityEdit" | "Custom")
+ ├── entity: string (optional)
+ ├── layout: LayoutNode[]      // Root node of page layout
+ ├── listConfig: ListConfig    // For entity lists
+ ├── fieldOverrides: FieldOverride[]
+ └── permissions: Permissions
+1.4.1 LayoutNode
+Field	Type	Description
+id	string	Node ID
+type	string	"Section", "Row", "Tabs", "Tab", "Field", "DataTable"
+props	object	Node-specific properties
+children	LayoutNode[]	Nested nodes
+1.4.2 Field Override
+Field	Type	Description
+field	string	Entity property name
+readonly	string	Expression to determine readonly at runtime
+visible	string	Expression to determine visibility at runtime
+default	any	Optional default value
+1.4.3 ListConfig
+Field	Type	Description
+columns	string[]	Properties to show in table
+filterFields	string[]	Properties allowed for filtering
+quickSearchFields	string[]	Properties searchable in global search
+defaultSort	object[]	Field + direction ("asc"/"desc")
+pageSize	int	Rows per page
+1.5 Navigation Definition
+NavigationItem
+ ├── id: string
+ ├── label: string
+ ├── page: string (Page ID)
+ ├── children: NavigationItem[]
+ └── tenantId: string (optional)
+1.6 Workflow Definition (BPMN-aligned)
+Field	Type	Description
+id	string	Workflow ID
+entity	string	Target entity
+tenantId	string (optional)	Tenant-specific workflow
+startEvent	object	Trigger type: onCreate, onUpdate, onDelete, manual, timer
+tasks	Task[]	List of tasks (updateField, createEntity, sendNotification, customAction)
+sequenceFlows	SequenceFlow[]	Order of tasks with optional condition expressions
+1.7 Roles & Permissions
+
+Role
+
+id : string
+
+name : string
+
+inherits : string[] (optional)
+
+tenantScoped: boolean
+
+Permission
+
+resourceType: "Entity" | "Page" | "Workflow"
+
+resourceId: string
+
+actions: "create" | "read" | "update" | "delete" | "execute"
+
+tenantScoped: boolean
+
+1.8 Component Registry
+Field	Type	Description
+id	string	Unique component ID
+category	string	"field", "layout", "data"
+version	string	Semantic version
+propsSchema	object	Key-value types for component props
+1.9 Themes
+Field	Type	Description
+id	string	Theme ID
+colors	object	primary, secondary, background, text
+typography	object	fontFamily, fontSize
+2. Release Snapshot
+ReleaseSnapshot
+ ├── ReleaseId: string
+ ├── Version: string
+ ├── Metadata: Copy of Authoring JSON
+ ├── TenantOverrides: optional
+ └── ValidationStatus: "Pending" | "Valid" | "Invalid"
+
+Immutable snapshot of Authoring JSON.
+
+Validates all expressions and layout rules.
+
+Used for deployment and tenant installation.
+
+3. Compiler
+
+Transforms Release Snapshot into optimized runtime artifact.
+
+CompiledRuntimeArtifact
+ ├── CompiledPages
+ │    ├── RenderTree: flattened layout
+ │    ├── StaticNodes: SSR safe nodes
+ │    ├── DynamicNodes: expression-driven nodes
+ │    └── ExpressionMap: expression ID → expression string
+ ├── CompiledWorkflows
+ │    ├── Tasks
+ │    ├── SequenceFlows
+ │    └── StartEvents
+ ├── CompiledNavigation: role-specific navigation trees
+ ├── DBMigrations: SQL scripts
+ └── MetadataVersion
+4. Environment Deployment
+Environment
+ ├── EnvironmentId: string
+ ├── TenantId: string
+ ├── ReleaseId: string
+ ├── EnvironmentType: dev | test | prod
+ ├── DBConnection
+ ├── RuntimeMetadata: CompiledRuntimeArtifact
+ └── DeploymentStatus: Pending | Completed
+
+Runs migrations
+
+Registers workflows
+
+Caches compiled metadata
+
+example:
+
+{
+  "application": {
+    "id": "salesapp",
+    "name": "Sales Application",
+    "version": "1.0.0",
+    "multiTenant": true,
+    "defaultTenantId": "global",
+    "createdBy": "system",
+    "createdAt": "2026-02-27T12:00:00Z"
+  },
+
+  "roles": [
+    { "id": "Admin", "name": "Administrator" },
+    { "id": "SalesUser", "name": "Sales User" },
+    { "id": "Manager", "name": "Manager", "inherits": ["SalesUser"] }
+  ],
+
+  "permissions": [
+    { "resourceType": "Entity", "resourceId": "Customer", "actions": ["create","read","update","delete"] },
+    { "resourceType": "Entity", "resourceId": "Order", "actions": ["create","read","update","delete"] }
+  ],
+
+  "entities": [
+    {
+      "id": "Customer",
+      "displayName": "Customer",
+      "tenantScoped": true,
+      "properties": [
+        { "name": "id", "type": "uuid", "required": true },
+        { "name": "tenantId", "type": "uuid", "required": true },
+        { "name": "firstName", "type": "string", "required": true, "length": 150 },
+        { "name": "lastName", "type": "string", "required": true, "length": 150 },
+        { "name": "email", "type": "string", "length": 200 },
+        { "name": "status", "type": "string", "length": 50 },
+        { "name": "createdAt", "type": "datetime" }
+      ],
+      "relations": [
+        { "name": "orders", "type": "one-to-many", "target": "Order", "inverse": "customer", "required": false }
+      ]
+    },
+    {
+      "id": "Order",
+      "displayName": "Order",
+      "tenantScoped": true,
+      "properties": [
+        { "name": "id", "type": "uuid", "required": true },
+        { "name": "tenantId", "type": "uuid", "required": true },
+        { "name": "customerId", "type": "relation", "target": "Customer", "required": true },
+        { "name": "orderDate", "type": "date" },
+        { "name": "amount", "type": "decimal", "precision": 10, "scale": 2 },
+        { "name": "tax", "type": "decimal", "calculated": true, "expression": "entity.amount * 0.2", "persist": true },
+        { "name": "totalAmount", "type": "decimal", "calculated": true, "expression": "entity.amount + entity.tax", "persist": true },
+        { "name": "status", "type": "string", "length": 50 }
+      ],
+      "relations": [
+        { "name": "customer", "type": "many-to-one", "target": "Customer", "required": true }
+      ]
+    }
+  ],
+
+  "persistence": {
+    "databaseProvider": "postgres",
+    "namingStrategy": "snake_case",
+    "entities": [
+      {
+        "entity": "Customer",
+        "tableName": "customers",
+        "indexes": [
+          { "properties": ["tenantId","email"], "unique": true },
+          { "properties": ["tenantId","createdAt"], "unique": false }
+        ]
+      },
+      {
+        "entity": "Order",
+        "tableName": "orders",
+        "indexes": [
+          { "properties": ["tenantId","customerId"], "unique": false },
+          { "properties": ["tenantId","orderDate"], "unique": false }
+        ]
+      }
+    ]
+  },
+
+  "pages": [
+    {
+      "id": "CustomerListPage",
+      "type": "EntityList",
+      "entity": "Customer",
+      "permissions": { "allowedRoles": ["SalesUser","Manager","Admin"] },
+      "listConfig": {
+        "columns": ["firstName","lastName","email","status"],
+        "filterFields": ["status","createdAt"],
+        "quickSearchFields": ["firstName","lastName","email"],
+        "defaultSort": [{ "field": "createdAt","direction": "desc" }],
+        "pageSize": 25
+      }
+    },
+    {
+      "id": "CustomerEditPage",
+      "type": "EntityEdit",
+      "entity": "Customer",
+      "layout": {
+        "id": "root",
+        "type": "Section",
+        "props": { "title": "Customer Info" },
+        "children": [
+          {
+            "id": "row1",
+            "type": "Row",
+            "children": [
+              { "id": "f1", "type": "Field", "props": { "field": "firstName", "componentId": "TextInput" } },
+              { "id": "f2", "type": "Field", "props": { "field": "lastName", "componentId": "TextInput" } }
+            ]
+          },
+          {
+            "id": "row2",
+            "type": "Row",
+            "children": [
+              { "id": "f3", "type": "Field", "props": { "field": "email", "componentId": "TextInput" } },
+              { "id": "f4", "type": "Field", "props": { "field": "status", "componentId": "Select" } }
+            ]
+          }
+        ]
+      },
+      "fieldOverrides": [
+        { "field": "status", "readonly": "currentUser.role != 'Manager'" }
+      ]
+    },
+    {
+      "id": "OrderEditPage",
+      "type": "EntityEdit",
+      "entity": "Order",
+      "layout": {
+        "id": "root",
+        "type": "Tabs",
+        "children": [
+          {
+            "id": "generalTab",
+            "type": "Tab",
+            "props": { "title": "General" },
+            "children": [
+              {
+                "id": "row1",
+                "type": "Row",
+                "children": [
+                  { "id": "o1", "type": "Field", "props": { "field": "orderDate", "componentId": "DatePicker" } },
+                  { "id": "o2", "type": "Field", "props": { "field": "amount", "componentId": "NumberInput" } }
+                ]
+              },
+              {
+                "id": "row2",
+                "type": "Row",
+                "children": [
+                  { "id": "o3", "type": "Field", "props": { "field": "tax", "componentId": "NumberInput", "readonly": true } },
+                  { "id": "o4", "type": "Field", "props": { "field": "totalAmount", "componentId": "NumberInput", "readonly": true } }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+
+  "navigation": [
+    {
+      "id": "nav_customer",
+      "label": "Customers",
+      "children": [
+        { "id": "nav_customer_list", "label": "Search Customers", "page": "CustomerListPage" },
+        { "id": "nav_customer_edit", "label": "Add Customer", "page": "CustomerEditPage" }
+      ]
+    },
+    {
+      "id": "nav_orders",
+      "label": "Orders",
+      "children": [
+        { "id": "nav_order_edit", "label": "Create Order", "page": "OrderEditPage" }
+      ]
+    }
+  ],
+
+  "workflows": [
+    {
+      "id": "OrderInitialize",
+      "entity": "Order",
+      "tenantId": "global",
+      "startEvent": { "type": "onCreate" },
+      "tasks": [
+        { "id": "setStatus", "type": "updateField", "config": { "field": "status", "value": "'Draft'" } },
+        { "id": "sendEmail", "type": "sendNotification", "config": { "template": "HighValueOrder" } }
+      ],
+      "sequenceFlows": [
+        { "from": "setStatus", "to": "sendEmail", "condition": "entity.totalAmount > 1000" }
+      ]
+    }
+  ],
+
+  "componentRegistry": [
+    { "id": "TextInput", "category": "field", "version": "1.0" },
+    { "id": "NumberInput", "category": "field", "version": "1.0" },
+    { "id": "Select", "category": "field", "version": "1.0" },
+    { "id": "DatePicker", "category": "field", "version": "1.0" },
+    { "id": "Section", "category": "layout", "version": "1.0" },
+    { "id": "Row", "category": "layout", "version": "1.0" },
+    { "id": "Tabs", "category": "layout", "version": "1.0" },
+    { "id": "Tab", "category": "layout", "version": "1.0" },
+    { "id": "DataTable", "category": "data", "version": "1.0" }
+  ],
+
+  "themes": [
+    {
+      "id": "default",
+      "colors": { "primary": "#0055FF", "secondary": "#00CC88" },
+      "typography": { "fontFamily": "Arial", "fontSize": 14 }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "datarizen",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "pnpm run build --filter @datarizen/contracts --filter @datarizen/design && pnpm run build --filter builder --filter dashboard --filter runtime",
+    "build:packages": "pnpm run build --filter @datarizen/contracts --filter @datarizen/design",
+    "dev:builder": "pnpm run dev --filter builder",
+    "dev:dashboard": "pnpm run dev --filter dashboard",
+    "dev:runtime": "pnpm run dev --filter runtime",
+    "dev:all": "concurrently -n builder,dashboard,runtime -c blue,green,magenta \"npm run dev --prefix client/apps/builder\" \"npm run dev --prefix client/apps/dashboard\" \"npm run dev --prefix client/apps/runtime\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0",
+    "pnpm": "^9.0.0"
+  }
+}

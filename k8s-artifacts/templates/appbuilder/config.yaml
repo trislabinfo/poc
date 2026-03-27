@@ -1,0 +1,26 @@
+---
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: "appbuilder-config"
+  labels:
+    app.kubernetes.io/name: "datarizen"
+    app.kubernetes.io/component: "appbuilder"
+    app.kubernetes.io/instance: "{{.Release.Name}}"
+data:
+  OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES: "{{ .Values.config.appbuilder.OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES }}"
+  OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES: "{{ .Values.config.appbuilder.OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES }}"
+  OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "{{ .Values.config.appbuilder.OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY }}"
+  ASPNETCORE_FORWARDEDHEADERS_ENABLED: "{{ .Values.config.appbuilder.ASPNETCORE_FORWARDEDHEADERS_ENABLED }}"
+  HTTP_PORTS: "{{ .Values.config.appbuilder.HTTP_PORTS }}"
+  HTTPS_PORTS: "{{ .Values.config.appbuilder.HTTPS_PORTS }}"
+  DATARIZEN_ASPIRE_RUN_ID: "{{ .Values.config.appbuilder.DATARIZEN_ASPIRE_RUN_ID }}"
+  DR_DEVELOPMENT_DB_HOST: "{{ .Values.config.appbuilder.DR_DEVELOPMENT_DB_HOST }}"
+  DR_DEVELOPMENT_DB_PORT: "{{ .Values.config.appbuilder.DR_DEVELOPMENT_DB_PORT }}"
+  DR_DEVELOPMENT_DB_USERNAME: "{{ .Values.config.appbuilder.DR_DEVELOPMENT_DB_USERNAME }}"
+  DR_DEVELOPMENT_DB_JDBCCONNECTIONSTRING: "{{ .Values.config.appbuilder.DR_DEVELOPMENT_DB_JDBCCONNECTIONSTRING }}"
+  DR_DEVELOPMENT_CACHE_HOST: "{{ .Values.config.appbuilder.DR_DEVELOPMENT_CACHE_HOST }}"
+  DR_DEVELOPMENT_CACHE_PORT: "{{ .Values.config.appbuilder.DR_DEVELOPMENT_CACHE_PORT }}"
+  DR_DEVELOPMENT_MESSAGING_HOST: "{{ .Values.config.appbuilder.DR_DEVELOPMENT_MESSAGING_HOST }}"
+  DR_DEVELOPMENT_MESSAGING_PORT: "{{ .Values.config.appbuilder.DR_DEVELOPMENT_MESSAGING_PORT }}"
+  DR_DEVELOPMENT_MESSAGING_USERNAME: "{{ .Values.config.appbuilder.DR_DEVELOPMENT_MESSAGING_USERNAME }}"

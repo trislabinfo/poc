@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/defs/ValidationRuleDefinition.json",
+  "$defs": {
+    "ValidationRuleDefinition": {
+      "type": "object",
+      "description": "Single validation rule; used on entity property or field node. Error message resolved via messageKey from application translations.",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["required", "minLength", "maxLength", "pattern", "min", "max", "email", "custom"],
+          "description": "Rule kind."
+        },
+        "value": { "type": ["number", "string", "integer"], "description": "Parameter for min/max/length/pattern (e.g. regex string or numeric bound)." },
+        "messageKey": { "type": "string", "description": "Translation key for error message (e.g. validation.required)." }
+      }
+    }
+  }
+}

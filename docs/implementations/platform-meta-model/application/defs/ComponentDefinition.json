@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/defs/ComponentDefinition.json",
+  "$defs": {
+    "ComponentCategory": {
+      "type": "string",
+      "enum": ["Field", "Layout", "Data"],
+      "description": "Component category: Field (input), Layout (container), or Data (display)."
+    },
+    "ComponentPropertyDefinition": {
+      "type": "object",
+      "description": "Property definition within a component's propsSchema.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Property name."
+        },
+        "type": {
+          "type": "string",
+          "description": "JSON type (string, number, boolean, array, object)."
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether property is required."
+        },
+        "defaultValue": {
+          "description": "Default value for the property."
+        },
+        "description": {
+          "type": "string",
+          "description": "Property description/documentation."
+        }
+      }
+    },
+    "ComponentDefinition": {
+      "type": "object",
+      "description": "Registered UI component in the component registry. Components are referenced by componentId in layout nodes.",
+      "required": ["id", "category"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique component identifier (e.g. TextInput, DataTable)."
+        },
+        "category": {
+          "$ref": "#/$defs/ComponentCategory"
+        },
+        "version": {
+          "type": "string",
+          "description": "Semantic version of the component."
+        },
+        "propsSchema": {
+          "type": "object",
+          "description": "Optional JSON schema describing component properties.",
+          "additionalProperties": {
+            "$ref": "#/$defs/ComponentPropertyDefinition"
+          }
+        }
+      }
+    }
+  }
+}

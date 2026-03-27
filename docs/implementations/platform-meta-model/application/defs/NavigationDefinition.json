@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/defs/NavigationDefinition.json",
+  "$defs": {
+    "NavigationDefinition": {
+      "type": "object",
+      "description": "Navigation definition: defines a navigation container by type (e.g. sidebar left, sidebar right, hamburger) and its root items.",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier for this navigation." },
+        "type": {
+          "type": "string",
+          "enum": ["sidebarLeft", "sidebarRight", "hamburger", "topBar", "bottomBar"],
+          "description": "Navigation container type: sidebar left, sidebar right, hamburger menu, top bar, bottom bar."
+        },
+        "item": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/NavigationItemDefinition" },
+          "description": "Root navigation items (tree)."
+        }
+      }
+    },
+    "NavigationItemDefinition": {
+      "type": "object",
+      "description": "Navigation item definition; show/hide based on user role or permissions.",
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "page": { "type": "string", "description": "Page ID." },
+        "allowedRole": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Role IDs; item is visible only if user has at least one of these roles. Omit to show to all authenticated users."
+        },
+        "allowedPermission": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["resourceType", "resourceId", "action"],
+            "properties": {
+              "resourceType": { "type": "string", "enum": ["Entity", "Page", "Workflow"] },
+              "resourceId": { "type": "string" },
+              "action": { "type": "string", "enum": ["create", "read", "update", "delete", "execute"] }
+            }
+          },
+          "description": "Item is visible only if user has at least one of these permissions. If both allowedRole and allowedPermission are set, user must satisfy one of them."
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/NavigationItemDefinition" },
+          "description": "Nested navigation items."
+        },
+        "tenantId": { "type": "string" }
+      }
+    }
+  }
+}

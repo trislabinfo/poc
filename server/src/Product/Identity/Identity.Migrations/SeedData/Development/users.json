@@ -1,0 +1,24 @@
+[
+  {
+    "id": "30000000-0000-0000-0000-000000000001",
+    "email": "admin@dev.local",
+    "defaultTenantId": "10000000-0000-0000-0000-000000000001",
+    "displayName": "Admin User",
+    "passwordHash": "$2a$11$XKV8Z8qF5Z5Z5Z5Z5Z5Z5uO",
+    "isActive": true,
+    "createdAt": "2025-01-15T00:00:00Z",
+    "updatedAt": null,
+    "roleIds": ["20000000-0000-0000-0000-000000000001"]
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000002",
+    "email": "user@dev.local",
+    "defaultTenantId": "10000000-0000-0000-0000-000000000001",
+    "displayName": "Regular User",
+    "passwordHash": "$2a$11$XKV8Z8qF5Z5Z5Z5Z5Z5Z5Z5uO",
+    "isActive": true,
+    "createdAt": "2025-01-15T00:00:00Z",
+    "updatedAt": null,
+    "roleIds": ["20000000-0000-0000-0000-000000000002"]
+  }
+]

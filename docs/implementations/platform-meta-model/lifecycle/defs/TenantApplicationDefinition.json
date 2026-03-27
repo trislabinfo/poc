@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/lifecycle/defs/TenantApplicationDefinition.json",
+  "$defs": {
+    "TenantApplicationDefinition": {
+      "type": "object",
+      "description": "Tenant application: a tenant's instance of an application, either installed from catalog, created from scratch, or modified from an installed base.",
+      "required": ["id", "tenantId", "source", "status"],
+      "properties": {
+        "id": { "type": "string", "description": "Unique tenant application identifier." },
+        "tenantId": { "type": "string", "description": "Tenant that owns this application instance." },
+        "applicationId": {
+          "type": "string",
+          "description": "Base application id (when source is catalog or when created from scratch referencing an app)."
+        },
+        "applicationReleaseId": {
+          "type": "string",
+          "description": "Base application release id (when installed from catalog or when tenant app is based on a release)."
+        },
+        "catalogEntryId": {
+          "type": "string",
+          "description": "Catalog entry id when installed from catalog."
+        },
+        "source": {
+          "type": "string",
+          "enum": ["catalog", "fromScratch"],
+          "description": "How this tenant application was created: from catalog or from scratch."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "active", "archived"],
+          "description": "Current status of the tenant application."
+        },
+        "overrides": {
+          "$ref": "TenantApplicationOverridesDefinition.json#/$defs/TenantApplicationOverridesDefinition",
+          "description": "Tenant customizations applied on top of the base release (when tenant modifies installed application)."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- Prevent obj/bin collisions with the sibling BuildingBlocks.Api project. -->
+    <IntermediateOutputPath>obj\$(MSBuildProjectName)\</IntermediateOutputPath>
+    <OutputPath>bin\$(MSBuildProjectName)\</OutputPath>
+
+    <!-- Only compile frontend contracts/components. -->
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Frontend\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+</Project>
+

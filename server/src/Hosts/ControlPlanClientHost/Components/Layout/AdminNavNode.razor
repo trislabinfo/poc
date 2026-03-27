@@ -1,0 +1,38 @@
+@using BuildingBlocks.Web.AdminNavigation
+@using AntDesign
+@inject NavigationManager NavigationManager
+
+@code
+{
+    [Parameter, EditorRequired]
+    public required AdminNavItem Node { get; set; }
+
+    [Parameter, EditorRequired]
+    public required IReadOnlyList<AdminNavItem> AllItems { get; set; }
+
+    private IReadOnlyList<AdminNavItem> Children =>
+        AllItems
+            .Where(i => string.Equals(i.ParentKey, Node.Key, StringComparison.Ordinal))
+            .OrderBy(i => i.Order)
+            .ToArray();
+}
+
+@if (Children.Count == 0)
+{
+    <MenuItem Key="@Node.Key"
+              OnClick="@(() => NavigationManager.NavigateTo(Node.Href))">
+        @Node.Title
+    </MenuItem>
+}
+else
+{
+    <SubMenu Key="@Node.Key"
+              Title="@Node.Title"
+              IsOpen="true">
+        @foreach (var child in Children)
+        {
+            <AdminNavNode Node="child" AllItems="AllItems" />
+        }
+    </SubMenu>
+}
+

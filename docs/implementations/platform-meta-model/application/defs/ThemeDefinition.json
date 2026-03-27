@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/defs/ThemeDefinition.json",
+  "$defs": {
+    "ThemeDefinition": {
+      "type": "object",
+      "description": "Theme definition; defined only inside application definition.",
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string" },
+        "colors": {
+          "type": "object",
+          "properties": {
+            "primary": { "type": "string" },
+            "secondary": { "type": "string" },
+            "background": { "type": "string" },
+            "text": { "type": "string" }
+          }
+        },
+        "typography": {
+          "type": "object",
+          "properties": {
+            "fontFamily": { "type": "string" },
+            "fontSize": { "type": "integer" }
+          }
+        }
+      }
+    }
+  }
+}

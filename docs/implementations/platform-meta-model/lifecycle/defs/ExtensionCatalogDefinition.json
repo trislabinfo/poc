@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/lifecycle/defs/ExtensionCatalogDefinition.json",
+  "$defs": {
+    "ExtensionCatalogEntryDefinition": {
+      "type": "object",
+      "description": "Extension catalog entry: an extension release offered in the extension catalog for applications to reference.",
+      "required": ["id", "extensionId", "extensionReleaseId", "name"],
+      "properties": {
+        "id": { "type": "string", "description": "Unique extension catalog entry identifier." },
+        "extensionId": { "type": "string", "description": "Extension id." },
+        "extensionReleaseId": {
+          "type": "string",
+          "description": "Extension release id (or use version tag e.g. latest; resolution is platform-specific)."
+        },
+        "name": { "type": "string", "description": "Display name in extension catalog." },
+        "description": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "visibility": {
+          "type": "string",
+          "enum": ["public", "internal", "private"],
+          "description": "Who can see and use this entry."
+        }
+      }
+    }
+  }
+}

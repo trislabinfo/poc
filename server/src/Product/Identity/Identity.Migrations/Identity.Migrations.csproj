@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Datarizen.Identity.Migrations</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentMigrator.Runner.Postgres" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Migrations\BuildingBlocks.Migrations.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="SeedData\Common\permissions.json" LogicalName="Datarizen.Identity.Migrations.SeedData.Common.permissions.json" />
+    <EmbeddedResource Include="SeedData\Common\roles.json" LogicalName="Datarizen.Identity.Migrations.SeedData.Common.roles.json" />
+    <EmbeddedResource Include="SeedData\Development\users.json" LogicalName="Datarizen.Identity.Migrations.SeedData.Development.users.json" />
+    <EmbeddedResource Include="SeedData\Staging\users.json" LogicalName="Datarizen.Identity.Migrations.SeedData.Staging.users.json" />
+    <EmbeddedResource Include="SeedData\Production\users.json" LogicalName="Datarizen.Identity.Migrations.SeedData.Production.users.json" />
+  </ItemGroup>
+
+</Project>

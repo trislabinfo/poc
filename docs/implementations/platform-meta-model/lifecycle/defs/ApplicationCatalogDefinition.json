@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/lifecycle/defs/ApplicationCatalogDefinition.json",
+  "$defs": {
+    "ApplicationCatalogDefinition": {
+      "type": "object",
+      "description": "Application catalog item: an application release (or application) offered for tenant installation.",
+      "required": ["id", "applicationId", "applicationReleaseId", "name"],
+      "properties": {
+        "id": { "type": "string", "description": "Unique catalog item identifier." },
+        "applicationId": { "type": "string", "description": "Application id." },
+        "applicationReleaseId": {
+          "type": "string",
+          "description": "Application release id (or use version tag e.g. latest; resolution is platform-specific)."
+        },
+        "name": { "type": "string", "description": "Display name in catalog." },
+        "description": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

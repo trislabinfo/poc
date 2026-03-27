@@ -1,0 +1,34 @@
+{
+  "databaseProvider": "postgres",
+  "namingStrategy": "snake_case",
+  "entities": [
+    {
+      "entity": "oseba.Oseba",
+      "tableName": "oseba_oseba",
+      "indexes": [
+        { "properties": ["email"], "unique": false }
+      ]
+    },
+    {
+      "entity": "Zaposlen",
+      "tableName": "zaposlen",
+      "indexes": [
+        { "properties": ["oseba"], "unique": true }
+      ]
+    },
+    {
+      "entity": "Investitor",
+      "tableName": "investitor",
+      "indexes": [
+        { "properties": ["oseba"], "unique": true }
+      ]
+    },
+    {
+      "entity": "Gradbisce",
+      "tableName": "gradbisce",
+      "indexes": [
+        { "properties": ["naziv"], "unique": false }
+      ]
+    }
+  ]
+}

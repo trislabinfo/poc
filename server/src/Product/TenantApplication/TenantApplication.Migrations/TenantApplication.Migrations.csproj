@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Datarizen.TenantApplication.Migrations</RootNamespace>
+    <DevCertThumbprintFile>$(MSBuildThisFileDirectory)..\..\..\..\certs\dev-cert-thumbprint.txt</DevCertThumbprintFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentMigrator.Runner.Postgres" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Migrations\BuildingBlocks.Migrations.csproj" />
+  </ItemGroup>
+
+  <!-- Authenticode-sign so Windows trusts this DLL when MSBuild loads it (dev cert only). Set SignMigrationsAssembly=true to enable. -->
+  <Target Name="AuthenticodeSign" AfterTargets="Build"
+          Condition="'$(SignMigrationsAssembly)' == 'true' AND Exists('$(DevCertThumbprintFile)')">
+    <ReadLinesFromFile File="$(DevCertThumbprintFile)">
+      <Output TaskParameter="Lines" ItemName="DevCertThumbprintLine" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <_DevCertThumbprint>@(DevCertThumbprintLine)</_DevCertThumbprint>
+    </PropertyGroup>
+    <SignFile CertificateThumbprint="$(_DevCertThumbprint)"
+              SigningTarget="$(TargetPath)"
+              ContinueOnError="true" />
+  </Target>
+
+</Project>

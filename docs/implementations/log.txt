@@ -1,0 +1,129 @@
+# Runtime resolve error: relation "tenant.tenants" does not exist
+#
+# Cause: The database used by Runtime BFF (same as Monolith when run under AppHost) does not
+# have the Tenant module schema/table. The Runtime BFF resolve endpoint looks up the tenant
+# by slug in tenant.tenants; that table is created by FluentMigrator, not automatically.
+#
+# Fix: Run the MigrationRunner so the Tenant (and other) module migrations are applied:
+#   1. Use the same connection string as the Runtime BFF (e.g. from appsettings or Aspire).
+#   2. From server/src/MigrationRunner: dotnet run
+#      Or with topology: dotnet run -- --topology Monolith
+#   3. This creates schema "tenant" and table "tenant.tenants" (and other modules).
+#
+# Code fix: GlobalExceptionHandlerMiddleware now returns 503 with a clear message when it
+# detects PostgreSQL 42P01 (relation does not exist), so the client sees "Database schema
+# not initialized. Run the MigrationRunner..." instead of a generic 500.
+#
+# --- Original log ---
+2026-02-25T17:25:27 [17:25:27 INF] Request starting HTTP/2 OPTIONS https://localhost:56799/api/runtime/resolve?tenantSlug=jan&appSlug=1&environment=Development - null null {"EventId": {"Id": 1}, "SourceContext": "Microsoft.AspNetCore.Hosting.Diagnostics", "RequestId": "0HNJKH9U3V843:00000001", "RequestPath": "/api/runtime/resolve", "ConnectionId": "0HNJKH9U3V843"}
+2026-02-25T17:25:27 [17:25:27 INF] CORS policy execution successful. {"EventId": {"Id": 4, "Name": "PolicySuccess"}, "SourceContext": "Microsoft.AspNetCore.Cors.Infrastructure.CorsService", "RequestId": "0HNJKH9U3V843:00000001", "RequestPath": "/api/runtime/resolve", "ConnectionId": "0HNJKH9U3V843"}
+2026-02-25T17:25:27 [17:25:27 INF] Request finished HTTP/2 OPTIONS https://localhost:56799/api/runtime/resolve?tenantSlug=jan&appSlug=1&environment=Development - 204 null null 105.3412ms {"EventId": {"Id": 2}, "SourceContext": "Microsoft.AspNetCore.Hosting.Diagnostics", "RequestId": "0HNJKH9U3V843:00000001", "RequestPath": "/api/runtime/resolve", "ConnectionId": "0HNJKH9U3V843"}
+2026-02-25T17:25:27 [17:25:27 INF] Request starting HTTP/2 GET https://localhost:56799/api/runtime/resolve?tenantSlug=jan&appSlug=1&environment=Development - null null {"EventId": {"Id": 1}, "SourceContext": "Microsoft.AspNetCore.Hosting.Diagnostics", "RequestId": "0HNJKH9U3V843:00000003", "RequestPath": "/api/runtime/resolve", "ConnectionId": "0HNJKH9U3V843"}
+2026-02-25T17:25:27 [17:25:27 INF] CORS policy execution successful. {"EventId": {"Id": 4, "Name": "PolicySuccess"}, "SourceContext": "Microsoft.AspNetCore.Cors.Infrastructure.CorsService", "RequestId": "0HNJKH9U3V843:00000003", "RequestPath": "/api/runtime/resolve", "ConnectionId": "0HNJKH9U3V843"}
+2026-02-25T17:25:27 [17:25:27 INF] HTTP GET /api/runtime/resolve [Client: runtime] started {"SourceContext": "BuildingBlocks.Web.Middleware.RequestLoggingMiddleware", "CorrelationId": "b617bd3a-ed64-41b1-9cbd-cbe90724d44b", "RequestId": "0HNJKH9U3V843:00000003", "RequestPath": "/api/runtime/resolve", "ConnectionId": "0HNJKH9U3V843"}
+2026-02-25T17:25:27 [17:25:27 INF] Executing endpoint 'AppRuntime.BFF.Controllers.RuntimeBffController.Resolve (AppRuntime.BFF)' {"EventId": {"Name": "ExecutingEndpoint"}, "SourceContext": "Microsoft.AspNetCore.Routing.EndpointMiddleware", "CorrelationId": "b617bd3a-ed64-41b1-9cbd-cbe90724d44b", "RequestId": "0HNJKH9U3V843:00000003", "RequestPath": "/api/runtime/resolve", "ConnectionId": "0HNJKH9U3V843"}
+2026-02-25T17:25:27 [17:25:27 INF] Route matched with {action = "Resolve", controller = "RuntimeBff"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Resolve(System.String, System.String, System.String, System.Threading.CancellationToken) on controller AppRuntime.BFF.Controllers.RuntimeBffController (AppRuntime.BFF). {"EventId": {"Id": 102, "Name": "ControllerActionExecuting"}, "SourceContext": "Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker", "ActionId": "4e36bf12-f5e9-4b2a-bd64-f0ebb668d003", "ActionName": "AppRuntime.BFF.Controllers.RuntimeBffController.Resolve (AppRuntime.BFF)", "CorrelationId": "b617bd3a-ed64-41b1-9cbd-cbe90724d44b", "RequestId": "0HNJKH9U3V843:00000003", "RequestPath": "/api/runtime/resolve", "ConnectionId": "0HNJKH9U3V843"}
+2026-02-25T17:25:29 [17:25:29 WRN] You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license. {"SourceContext": "LuckyPennySoftware.MediatR.License", "ActionId": "4e36bf12-f5e9-4b2a-bd64-f0ebb668d003", "ActionName": "AppRuntime.BFF.Controllers.RuntimeBffController.Resolve (AppRuntime.BFF)", "CorrelationId": "b617bd3a-ed64-41b1-9cbd-cbe90724d44b", "RequestId": "0HNJKH9U3V843:00000003", "RequestPath": "/api/runtime/resolve", "ConnectionId": "0HNJKH9U3V843"}
+2026-02-25T17:25:29 [17:25:29 INF] Executing action method AppRuntime.BFF.Controllers.RuntimeBffController.Resolve (AppRuntime.BFF) - Validation state: Valid {"EventId": {"Id": 101, "Name": "ActionMethodExecuting"}, "SourceContext": "Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker", "ActionId": "4e36bf12-f5e9-4b2a-bd64-f0ebb668d003", "CorrelationId": "b617bd3a-ed64-41b1-9cbd-cbe90724d44b", "RequestId": "0HNJKH9U3V843:00000003", "RequestPath": "/api/runtime/resolve", "ConnectionId": "0HNJKH9U3V843"}
+2026-02-25T17:25:30 [17:25:30 ERR] Failed executing DbCommand (71ms) [Parameters=[@slug='?'], CommandType='Text', CommandTimeout='30']
+2026-02-25T17:25:30 SELECT t.id, t.created_at, t.name, t.slug, t.updated_at
+2026-02-25T17:25:30 FROM tenant.tenants AS t
+2026-02-25T17:25:30 WHERE t.slug = @slug
+2026-02-25T17:25:30 LIMIT 1 {"EventId": {"Id": 20102, "Name": "Microsoft.EntityFrameworkCore.Database.Command.CommandError"}, "SourceContext": "Microsoft.EntityFrameworkCore.Database.Command", "ActionId": "4e36bf12-f5e9-4b2a-bd64-f0ebb668d003", "ActionName": "AppRuntime.BFF.Controllers.RuntimeBffController.Resolve (AppRuntime.BFF)", "CorrelationId": "b617bd3a-ed64-41b1-9cbd-cbe90724d44b", "RequestId": "0HNJKH9U3V843:00000003", "RequestPath": "/api/runtime/resolve", "ConnectionId": "0HNJKH9U3V843"}
+2026-02-25T17:25:30 [17:25:30 ERR] An exception occurred while iterating over the results of a query for context type 'Tenant.Infrastructure.Data.TenantDbContext'.
+2026-02-25T17:25:30 Npgsql.PostgresException (0x80004005): 42P01: relation "tenant.tenants" does not exist
+2026-02-25T17:25:30  
+2026-02-25T17:25:30 POSITION: 63
+2026-02-25T17:25:30    at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+2026-02-25T17:25:30    at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+2026-02-25T17:25:30    at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2026-02-25T17:25:30   Exception data:
+2026-02-25T17:25:30     Severity: ERROR
+2026-02-25T17:25:30     SqlState: 42P01
+2026-02-25T17:25:30     MessageText: relation "tenant.tenants" does not exist
+2026-02-25T17:25:30     Position: 63
+2026-02-25T17:25:30     File: parse_relation.c
+2026-02-25T17:25:30     Line: 1428
+2026-02-25T17:25:30     Routine: parserOpenTable {"EventId": {"Id": 10100, "Name": "Microsoft.EntityFrameworkCore.Query.QueryIterationFailed"}, "SourceContext": "Microsoft.EntityFrameworkCore.Query", "ActionId": "4e36bf12-f5e9-4b2a-bd64-f0ebb668d003", "ActionName": "AppRuntime.BFF.Controllers.RuntimeBffController.Resolve (AppRuntime.BFF)", "CorrelationId": "b617bd3a-ed64-41b1-9cbd-cbe90724d44b", "RequestId": "0HNJKH9U3V843:00000003", "RequestPath": "/api/runtime/resolve", "ConnectionId": "0HNJKH9U3V843"}
+2026-02-25T17:25:30 Npgsql.PostgresException (0x80004005): 42P01: relation "tenant.tenants" does not exist
+2026-02-25T17:25:30  
+2026-02-25T17:25:30 POSITION: 63
+2026-02-25T17:25:30    at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+2026-02-25T17:25:30    at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+2026-02-25T17:25:30    at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2026-02-25T17:25:30   Exception data:
+2026-02-25T17:25:30     Severity: ERROR
+2026-02-25T17:25:30     SqlState: 42P01
+2026-02-25T17:25:30     MessageText: relation "tenant.tenants" does not exist
+2026-02-25T17:25:30     Position: 63
+2026-02-25T17:25:30     File: parse_relation.c
+2026-02-25T17:25:30     Line: 1428
+2026-02-25T17:25:30     Routine: parserOpenTable
+2026-02-25T17:25:30 [17:25:30 INF] Executed action AppRuntime.BFF.Controllers.RuntimeBffController.Resolve (AppRuntime.BFF) in 2413.8706ms {"EventId": {"Id": 105, "Name": "ActionExecuted"}, "SourceContext": "Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker", "CorrelationId": "b617bd3a-ed64-41b1-9cbd-cbe90724d44b", "RequestId": "0HNJKH9U3V843:00000003", "RequestPath": "/api/runtime/resolve", "ConnectionId": "0HNJKH9U3V843"}
+2026-02-25T17:25:30 [17:25:30 INF] Executed endpoint 'AppRuntime.BFF.Controllers.RuntimeBffController.Resolve (AppRuntime.BFF)' {"EventId": {"Id": 1, "Name": "ExecutedEndpoint"}, "SourceContext": "Microsoft.AspNetCore.Routing.EndpointMiddleware", "CorrelationId": "b617bd3a-ed64-41b1-9cbd-cbe90724d44b", "RequestId": "0HNJKH9U3V843:00000003", "RequestPath": "/api/runtime/resolve", "ConnectionId": "0HNJKH9U3V843"}
+2026-02-25T17:25:30 [17:25:30 INF] HTTP GET /api/runtime/resolve [Client: runtime] completed with 200 in 2530ms {"SourceContext": "BuildingBlocks.Web.Middleware.RequestLoggingMiddleware", "CorrelationId": "b617bd3a-ed64-41b1-9cbd-cbe90724d44b", "RequestId": "0HNJKH9U3V843:00000003", "RequestPath": "/api/runtime/resolve", "ConnectionId": "0HNJKH9U3V843"}
+2026-02-25T17:25:30 [17:25:30 ERR] Unhandled exception {"SourceContext": "BuildingBlocks.Web.Middleware.GlobalExceptionHandlerMiddleware", "CorrelationId": "b617bd3a-ed64-41b1-9cbd-cbe90724d44b", "RequestId": "0HNJKH9U3V843:00000003", "RequestPath": "/api/runtime/resolve", "ConnectionId": "0HNJKH9U3V843"}
+2026-02-25T17:25:30 Npgsql.PostgresException (0x80004005): 42P01: relation "tenant.tenants" does not exist
+2026-02-25T17:25:30  
+2026-02-25T17:25:30 POSITION: 63
+2026-02-25T17:25:30    at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+2026-02-25T17:25:30    at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+2026-02-25T17:25:30    at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2026-02-25T17:25:30    at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+2026-02-25T17:25:30    at Tenant.Infrastructure.Repositories.TenantRepository.GetBySlugAsync(String slug, CancellationToken cancellationToken) in C:\dr\poc9.1\server\src\Product\Tenant\Tenant.Infrastructure\Repositories\TenantRepository.cs:line 20
+2026-02-25T17:25:30    at Tenant.Application.Services.TenantResolverService.GetBySlugAsync(String slug, CancellationToken cancellationToken) in C:\dr\poc9.1\server\src\Product\Tenant\Tenant.Application\Services\TenantResolverService.cs:line 22
+2026-02-25T17:25:30    at TenantApplication.Application.Services.ApplicationResolverService.ResolveByUrlAsync(String tenantSlug, String appSlug, String environment, CancellationToken cancellationToken) in C:\dr\poc9.1\server\src\Product\TenantApplication\TenantApplication.Application\Services\ApplicationResolverService.cs:line 36
+2026-02-25T17:25:30    at AppRuntime.BFF.Controllers.RuntimeBffController.Resolve(String tenantSlug, String appSlug, String environment, CancellationToken cancellationToken) in C:\dr\poc9.1\server\src\Product\AppRuntime\AppRuntime.BFF\Controllers\RuntimeBffController.cs:line 51
+2026-02-25T17:25:30    at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+2026-02-25T17:25:30    at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+2026-02-25T17:25:30    at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2026-02-25T17:25:30    at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+2026-02-25T17:25:30    at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+2026-02-25T17:25:30    at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2026-02-25T17:25:30    at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2026-02-25T17:25:30    at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+2026-02-25T17:25:30    at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+2026-02-25T17:25:30    at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+2026-02-25T17:25:30    at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+2026-02-25T17:25:30    at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+2026-02-25T17:25:30    at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+2026-02-25T17:25:30    at BuildingBlocks.Web.Middleware.TenantResolutionMiddleware.InvokeAsync(HttpContext context) in C:\dr\poc9.1\server\src\BuildingBlocks\Web\Middleware\TenantResolutionMiddleware.cs:line 32
+2026-02-25T17:25:30    at BuildingBlocks.Web.Middleware.RequestLoggingMiddleware.InvokeAsync(HttpContext context) in C:\dr\poc9.1\server\src\BuildingBlocks\Web\Middleware\RequestLoggingMiddleware.cs:line 36
+2026-02-25T17:25:30    at BuildingBlocks.Web.Middleware.GlobalExceptionHandlerMiddleware.InvokeAsync(HttpContext context) in C:\dr\poc9.1\server\src\BuildingBlocks\Web\Middleware\GlobalExceptionHandlerMiddleware.cs:line 28
+2026-02-25T17:25:30   Exception data:
+2026-02-25T17:25:30     Severity: ERROR
+2026-02-25T17:25:30     SqlState: 42P01
+2026-02-25T17:25:30     MessageText: relation "tenant.tenants" does not exist
+2026-02-25T17:25:30     Position: 63
+2026-02-25T17:25:30     File: parse_relation.c
+2026-02-25T17:25:30     Line: 1428
+2026-02-25T17:25:30     Routine: parserOpenTable
+2026-02-25T17:25:30 [17:25:30 INF] Request finished HTTP/2 GET https://localhost:56799/api/runtime/resolve?tenantSlug=jan&appSlug=1&environment=Development - 500 null application/json 2720.0265ms {"EventId": {"Id": 2}, "SourceContext": "Microsoft.AspNetCore.Hosting.Diagnostics", "RequestId": "0HNJKH9U3V843:00000003", "RequestPath": "/api/runtime/resolve", "ConnectionId": "0HNJKH9U3V843"}

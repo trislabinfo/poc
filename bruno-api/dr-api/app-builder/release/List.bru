@@ -1,0 +1,20 @@
+meta {
+  name: List
+  type: http
+  seq: 1
+}
+
+get {
+  url: https://localhost:8443/api/appbuilder/applications/c7d75d5d-a23f-4674-bc72-1574cabc9b04/releases
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

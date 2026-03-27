@@ -1,0 +1,126 @@
+{
+  "application": {
+    "id": "lovec",
+    "name": "Lovec",
+    "version": "1.0.0",
+    "multiTenant": true,
+    "createdBy": "system",
+    "createdAt": "2025-01-01T00:00:00Z",
+    "extensionReferences": [
+      {
+        "extensionId": "oseba",
+        "version": "1.0.0",
+        "overrides": {
+          "entityPropertyAdditions": [
+            {
+              "entityId": "Oseba",
+              "properties": [
+                { "name": "clanska_stevilka", "type": "string" }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "entities": [
+      {
+        "id": "Lovisce",
+        "displayName": "Lovišče",
+        "tenantScoped": true,
+        "properties": [
+          { "name": "naziv", "type": "string", "required": true },
+          { "name": "opis", "type": "text" }
+        ],
+        "relations": []
+      }
+    ],
+    "pages": [
+      {
+        "id": "LovciList",
+        "type": "EntityList",
+        "entity": "oseba.Oseba",
+        "listConfig": {
+          "columns": ["ime", "priimek", "email", "clanska_stevilka"],
+          "defaultSort": [{ "field": "priimek", "direction": "asc" }]
+        }
+      },
+      {
+        "id": "LovciEdit",
+        "type": "EntityEdit",
+        "entity": "oseba.Oseba",
+        "layout": {
+          "id": "s1",
+          "type": "Section",
+          "title": "Podatki lovca",
+          "children": [
+            {
+              "id": "r1",
+              "type": "Row",
+              "columns": 1,
+              "children": [
+                { "id": "f1", "type": "Field", "field": "ime", "componentId": "TextInput" },
+                { "id": "f2", "type": "Field", "field": "priimek", "componentId": "TextInput" },
+                { "id": "f3", "type": "Field", "field": "naslov", "componentId": "TextInput" },
+                { "id": "f4", "type": "Field", "field": "email", "componentId": "TextInput" },
+                { "id": "f5", "type": "Field", "field": "clanska_stevilka", "componentId": "TextInput" }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "LoviscaList",
+        "type": "EntityList",
+        "entity": "Lovisce",
+        "listConfig": {
+          "columns": ["naziv", "opis"],
+          "defaultSort": [{ "field": "naziv", "direction": "asc" }]
+        }
+      },
+      {
+        "id": "LovisceEdit",
+        "type": "EntityEdit",
+        "entity": "Lovisce",
+        "layout": {
+          "id": "s1",
+          "type": "Section",
+          "title": "Podatki lovišča",
+          "children": [
+            {
+              "id": "r1",
+              "type": "Row",
+              "columns": 1,
+              "children": [
+                { "id": "f1", "type": "Field", "field": "naziv", "componentId": "TextInput" },
+                { "id": "f2", "type": "Field", "field": "opis", "componentId": "TextArea" }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "navigation": [
+      {
+        "id": "main",
+        "type": "sidebarLeft",
+        "item": [
+          { "id": "nav-lovci", "label": "Lovci", "page": "LovciList" },
+          { "id": "nav-lovisca", "label": "Lovišča", "page": "LoviscaList" }
+        ]
+      }
+    ],
+    "workflows": [],
+    "roles": [],
+    "permissions": [],
+    "codeTables": [],
+    "dataSources": [],
+    "defaultLocale": "sl",
+    "supportedLocales": ["sl"],
+    "translations": {
+      "sl": {
+        "nav.lovci": "Lovci",
+        "nav.lovisca": "Lovišča"
+      }
+    }
+  }
+}

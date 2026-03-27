@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/lifecycle/defs/TenantApplicationReleaseDefinition.json",
+  "$defs": {
+    "TenantApplicationReleaseDefinition": {
+      "allOf": [
+        { "$ref": "../../Common/AuditDefinition.json#/$defs/AuditDefinition" },
+        {
+          "type": "object",
+          "description": "Tenant application release: immutable effective snapshot at a version. Release metadata only; content is stored as TenantApplicationReleaseArtifactDefinition rows (app + copied extension artifacts, tenant overrides merged). Used for deployment.",
+          "required": ["id", "tenantApplicationId", "version", "status", "createdBy", "createdAt"],
+          "properties": {
+            "id": { "type": "string", "description": "Unique tenant application release identifier." },
+            "tenantApplicationId": { "type": "string", "description": "Tenant application this release belongs to." },
+            "applicationReleaseId": {
+              "type": "string",
+              "description": "Base application release this tenant release was built from (for traceability)."
+            },
+            "version": { "$ref": "../../Common/SemanticVersionDefinition.json#/$defs/SemanticVersion" },
+            "status": {
+              "type": "string",
+              "enum": ["Pending", "Valid", "Invalid"],
+              "description": "Validation status of the snapshot."
+            },
+            "domainModel": {
+              "$ref": "../../Common/DomainModelDefinition.json#/$defs/DomainModelDefinition",
+              "description": "Optional DDD aggregate version for optimistic concurrency."
+            }
+          }
+        }
+      ]
+    }
+  }
+}

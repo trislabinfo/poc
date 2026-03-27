@@ -1,0 +1,103 @@
+@page "/admin/tenants/add-edit"
+@using Tenant.Web.Clients
+@using Tenant.Web.Models
+@inject ITenantApiClient TenantApiClient
+
+<PageTitle>Tenants - Add/Edit</PageTitle>
+
+<div class="cp-page">
+    <div class="cp-card">
+        <h2 class="cp-card-title">Add / Edit Tenant</h2>
+        <p class="cp-card-subtitle cp-text-muted">
+            Create a tenant using the shared REST client infrastructure.
+        </p>
+
+        <EditForm Model="_model" FormName="create-tenant" OnValidSubmit="CreateTenantAsync">
+            <DataAnnotationsValidator />
+            <div class="cp-form">
+                <ValidationSummary />
+
+                <div class="cp-form-grid">
+                    <div class="cp-field">
+                        <label class="cp-label">Name</label>
+                        <Input TValue="string"
+                                Value="_model.Name"
+                                ValueChanged="@(v => _model.Name = v)"
+                                ValueExpression="@(() => _model.Name)"
+                                Placeholder="Tenant name" />
+                    </div>
+                    <div class="cp-field">
+                        <label class="cp-label">Slug</label>
+                        <Input TValue="string"
+                                Value="_model.Slug"
+                                ValueChanged="@(v => _model.Slug = v)"
+                                ValueExpression="@(() => _model.Slug)"
+                                Placeholder="tenant-slug" />
+                    </div>
+                </div>
+
+                <div class="cp-actions">
+                    <Button Type="ButtonType.Primary"
+                            HtmlType="submit"
+                            Disabled="_isSubmitting"
+                            Loading="_isSubmitting">
+                        @_isSubmitting ? "Creating..." : "Create tenant"
+                    </Button>
+                </div>
+            </div>
+        </EditForm>
+
+        @if (!string.IsNullOrWhiteSpace(_message))
+        {
+            <div class="cp-alert" role="alert" aria-live="polite">
+                @_message
+            </div>
+        }
+
+        @if (_createdTenant is not null)
+        {
+            <div class="cp-alert" role="status" aria-live="polite">
+                <strong>Created:</strong> @_createdTenant.Name (@_createdTenant.Slug) - @_createdTenant.Id
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private readonly CreateTenantFormModel _model = new();
+    private string? _message;
+    private TenantDto? _createdTenant;
+    private bool _isSubmitting;
+
+    private async Task CreateTenantAsync()
+    {
+        if (_isSubmitting)
+            return;
+
+        _isSubmitting = true;
+        _message = null;
+        _createdTenant = null;
+
+        try
+        {
+            var result = await TenantApiClient.CreateTenantAsync(
+                new CreateTenantRequest(_model.Name.Trim(), _model.Slug.Trim()));
+
+            if (!result.IsSuccess)
+            {
+                _message = $"Create failed ({result.StatusCode}): {result.ErrorMessage}";
+                return;
+            }
+
+            _createdTenant = result.Data;
+            _message = "Tenant created successfully.";
+            _model.Name = string.Empty;
+            _model.Slug = string.Empty;
+        }
+        finally
+        {
+            _isSubmitting = false;
+        }
+    }
+}
+

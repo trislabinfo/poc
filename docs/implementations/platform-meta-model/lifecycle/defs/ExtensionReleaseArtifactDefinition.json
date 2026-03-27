@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/lifecycle/defs/ExtensionReleaseArtifactDefinition.json",
+  "$defs": {
+    "ExtensionReleaseArtifactType": {
+      "type": "string",
+      "enum": ["extension", "entity", "page", "navigation", "workflow", "role", "permission", "codeTable", "dataSource"],
+      "description": "Type of definition this artifact row holds. extension = extension root (dependsOn, defaultLocale, supportedLocales, translations); others = one row per definition with that type."
+    },
+    "ExtensionReleaseArtifactDefinition": {
+      "type": "object",
+      "description": "One row per piece of an extension release. Stored in a separate resource/table from ExtensionReleaseDefinition. Full release snapshot can be assembled on demand.",
+      "required": ["extensionReleaseId", "artifactType", "definitionId", "snapshot"],
+      "properties": {
+        "extensionReleaseId": {
+          "type": "string",
+          "description": "Extension release this artifact belongs to."
+        },
+        "artifactType": { "$ref": "#/$defs/ExtensionReleaseArtifactType" },
+        "definitionId": {
+          "type": "string",
+          "description": "Id of the definition: extensionId for artifactType extension; entity id, page id, etc. for other types."
+        },
+        "snapshot": {
+          "type": "object",
+          "description": "The definition JSON. Validates against the corresponding extension meta model (ExtensionDefinition root shape, EntityDefinition, PageDefinition, etc.)."
+        }
+      }
+    }
+  }
+}

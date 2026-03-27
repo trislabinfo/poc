@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/lifecycle/defs/TenantApplicationOverridesDefinition.json",
+  "$defs": {
+    "TenantApplicationOverridesDefinition": {
+      "type": "object",
+      "description": "Tenant-level overrides or customizations applied on top of a base application release. Used when tenant modifies an installed application.",
+      "properties": {
+        "pages": {
+          "type": "array",
+          "description": "Override or additional pages (structure conforms to application meta model page definitions)."
+        },
+        "navigation": {
+          "type": "array",
+          "description": "Override or additional navigation definitions."
+        },
+        "permissions": {
+          "type": "array",
+          "description": "Override or additional permissions."
+        },
+        "translations": {
+          "type": "object",
+          "description": "Tenant-specific translation overrides; merged with base at runtime.",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

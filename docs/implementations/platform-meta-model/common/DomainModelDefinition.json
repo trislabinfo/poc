@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/Common/DomainModelDefinition.json",
+  "$defs": {
+    "DomainModelDefinition": {
+      "type": "object",
+      "description": "DDD-related common properties for aggregate roots/entities: optimistic concurrency version.",
+      "required": ["version"],
+      "properties": {
+        "version": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Optimistic concurrency version (DDD aggregate version). Incremented on each update."
+        }
+      }
+    }
+  }
+}

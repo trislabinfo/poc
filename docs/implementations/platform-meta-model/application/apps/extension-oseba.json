@@ -1,0 +1,29 @@
+{
+  "id": "oseba",
+  "name": "Oseba",
+  "version": "1.0.0",
+  "entities": [
+    {
+      "id": "Oseba",
+      "displayName": "Oseba",
+      "tenantScoped": true,
+      "properties": [
+        { "name": "ime", "type": "string", "required": true },
+        { "name": "priimek", "type": "string", "required": true },
+        { "name": "naslov", "type": "string" },
+        { "name": "email", "type": "string" }
+      ],
+      "relations": []
+    }
+  ],
+  "pages": [],
+  "navigation": [],
+  "workflows": [],
+  "roles": [],
+  "permissions": [],
+  "codeTables": [],
+  "dataSources": [],
+  "defaultLocale": "sl",
+  "supportedLocales": ["sl"],
+  "translations": {}
+}

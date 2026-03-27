@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/Common/SemanticVersionDefinition.json",
+  "$defs": {
+    "SemanticVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[\\w.]+)?(\\+[\\w.]+)?$",
+      "description": "Semantic version: major.minor.patch with optional prerelease (-alpha.1) and build (+20230101)."
+    },
+    "SemanticVersionOrRange": {
+      "type": "string",
+      "description": "Semantic version or range (e.g. 1.0.0 or ^1.0.0). Resolution to exact version is platform-specific; at release time resolved version is exact (SemanticVersion)."
+    }
+  }
+}

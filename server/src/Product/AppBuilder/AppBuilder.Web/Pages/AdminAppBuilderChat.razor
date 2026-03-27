@@ -1,0 +1,186 @@
+@page "/admin/appbuilder/chat"
+@using AppBuilder.Web.Chat
+
+@inject IAppBuilderChatService ChatService
+@inject Microsoft.Extensions.Options.IOptions<AppBuilderWebOptions> WebOptions
+
+<div class="ab-chat-page">
+    <div class="ab-chat-shell">
+        <div class="ab-chat-header">
+            <div class="ab-chat-title-row">
+                <span class="ab-chat-title-icon" aria-hidden="true">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </span>
+                <span class="ab-chat-title">App Builder Chat</span>
+            </div>
+
+            <div class="ab-chat-subtitle">
+                Chat with an LLM. When needed, the assistant will create/update/read application definitions via MCP.
+            </div>
+
+            @if (_llmReady)
+            {
+                <div class="ab-chat-pill ab-chat-pill-ok">
+                    <i class="fa-solid fa-robot" aria-hidden="true"></i>
+                    <span>AI ready</span>
+                </div>
+            }
+            else
+            {
+                <div class="ab-chat-pill ab-chat-pill-missing">
+                    <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                    <span>AI not configured</span>
+                </div>
+            }
+        </div>
+
+        <div class="ab-chat-history" aria-live="polite">
+            @if (_history.Count == 0 && !_isSending)
+            {
+                <div class="ab-chat-empty">
+                    <div class="ab-chat-empty-title">Start building</div>
+                    <div class="ab-chat-empty-text">
+                        Ask the assistant to create or update an application definition. It can use MCP tools to fetch or modify data.
+                    </div>
+                </div>
+            }
+
+            @foreach (var message in _history)
+            {
+                <div class="@GetRowClass(message.Role)">
+                    <div class="@GetMessageBubbleClass(message.Role)">
+                        <div class="ab-chat-role">@GetRoleLabel(message.Role)</div>
+                        <div class="ab-chat-content">@message.Content</div>
+                    </div>
+                </div>
+            }
+
+            @if (_isSending)
+            {
+                <div class="ab-chat-row ab-chat-row-assistant">
+                    <div class="ab-bubble ab-bubble-assistant">
+                        <div class="ab-chat-role">Assistant</div>
+                        <div class="ab-chat-content">
+                            <span class="ab-typing">
+                                Thinking
+                                <span class="ab-typing-dots"><span></span><span></span><span></span></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(_error) || !string.IsNullOrWhiteSpace(_llmMissingReason))
+        {
+            <div class="ab-chat-error-area" role="alert">
+                <div class="ab-chat-error-icon" aria-hidden="true">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                </div>
+                <div class="ab-chat-error-text">
+                    @_error
+                    @if (string.IsNullOrWhiteSpace(_error) && !string.IsNullOrWhiteSpace(_llmMissingReason))
+                    {
+                        @_llmMissingReason
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="ab-chat-composer">
+            <MemoInput Rows="3"
+                       Placeholder="Describe what you want to build..."
+                       @bind-Value="_draft"
+                       AutoSize="true"
+                       Disabled="@(!_llmReady)" />
+
+            <div class="ab-chat-send">
+                <Button Color="Color.Primary"
+                        Clicked="@SendAsync"
+                        Disabled="@(!_llmReady || !_canSend || _isSending)">
+                    <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+                    <span>@(_isSending ? "Sending..." : "Send")</span>
+                </Button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code
+{
+    private readonly List<ChatMessage> _history = new();
+    private string _draft = string.Empty;
+    private bool _isSending;
+    private string? _error;
+    private bool _llmReady;
+    private string? _llmMissingReason;
+
+    protected override void OnInitialized()
+    {
+        var provider = WebOptions.Value.Llm.Provider?.Trim();
+        var apiKey = WebOptions.Value.Llm.ApiKey;
+
+        if (string.IsNullOrWhiteSpace(provider) || (!provider.Equals("OpenAI", StringComparison.OrdinalIgnoreCase) && !provider.Equals("Anthropic", StringComparison.OrdinalIgnoreCase)))
+        {
+            _llmMissingReason = "LLM is not configured: set `AppBuilderWeb:Llm:Provider` to `OpenAI` or `Anthropic`.";
+            _llmReady = false;
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(apiKey))
+        {
+            _llmMissingReason = "LLM is not configured: set `AppBuilderWeb:Llm:ApiKey` to enable AI chat.";
+            _llmReady = false;
+            return;
+        }
+
+        _llmReady = true;
+    }
+
+    private bool _canSend => !string.IsNullOrWhiteSpace(_draft);
+
+    private static string GetRoleLabel(string role) =>
+        role.Equals("user", StringComparison.OrdinalIgnoreCase) ? "You" : "Assistant";
+
+    private static string GetRowClass(string role) =>
+        role.Equals("user", StringComparison.OrdinalIgnoreCase)
+            ? "ab-chat-row ab-chat-row-user"
+            : "ab-chat-row ab-chat-row-assistant";
+
+    private static string GetMessageBubbleClass(string role) =>
+        role.Equals("user", StringComparison.OrdinalIgnoreCase) ? "ab-bubble ab-bubble-user" : "ab-bubble ab-bubble-assistant";
+
+    private async Task SendAsync()
+    {
+        if (!_llmReady)
+        {
+            _error = _llmMissingReason ?? "LLM is not configured.";
+            return;
+        }
+
+        if (!_canSend || _isSending)
+            return;
+
+        _error = null;
+        _isSending = true;
+
+        var user = _draft.Trim();
+        _draft = string.Empty;
+
+        try
+        {
+            var assistant = await ChatService.SendMessageAsync(_history, user, CancellationToken.None);
+            _history.Add(new ChatMessage { Role = "user", Content = user });
+            _history.Add(new ChatMessage { Role = "assistant", Content = assistant });
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _isSending = false;
+        }
+    }
+}
+

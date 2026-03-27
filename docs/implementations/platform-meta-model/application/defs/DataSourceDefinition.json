@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/defs/DataSourceDefinition.json",
+  "$defs": {
+    "DataSourceDefinition": {
+      "type": "object",
+      "description": "Data source (REST, gRPC, database). Operations are defined inside; each has an id (operationId) referenced by layout nodes.",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "type": "string", "description": "Unique data source identifier." },
+        "displayName": { "type": "string" },
+        "type": { "type": "string", "enum": ["rest", "grpc", "database"], "description": "Connection type." },
+        "authentication": { "$ref": "#/$defs/DataSourceAuthenticationDefinition" },
+        "connection": {
+          "type": "object",
+          "description": "Type-specific: baseUrl for rest, address for grpc, provider/connectionString for database.",
+          "additionalProperties": true
+        },
+        "operation": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/DataSourceOperationDefinition" },
+          "description": "Operations defined inside this data source; each has an id (operationId) used by layout nodes."
+        }
+      }
+    },
+    "DataSourceAuthenticationDefinition": {
+      "type": "object",
+      "description": "Authentication for a data source.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["none", "apiKey", "bearer", "basic", "oauth2", "clientCertificate"],
+          "description": "Auth type."
+        },
+        "config": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Type-specific config (headerName, token, username/password, tokenEndpoint, etc.)."
+        }
+      }
+    },
+    "DataSourceOperationDefinition": {
+      "oneOf": [
+        { "$ref": "#/$defs/DataSourceOperationRestRead" },
+        { "$ref": "#/$defs/DataSourceOperationRestWrite" },
+        { "$ref": "#/$defs/DataSourceOperationDatabase" }
+      ],
+      "description": "Operation defined inside a data source; shape depends on operation type (read has responseMapping with optionLabelPath/optionValuePath)."
+    },
+    "DataSourceOperationRestRead": {
+      "type": "object",
+      "description": "REST read (GET list or autocomplete); defines responseMapping for label/value.",
+      "required": ["id", "method", "path"],
+      "properties": {
+        "id": { "type": "string", "description": "Operation id (operationId) referenced by layout nodes." },
+        "displayName": { "type": "string" },
+        "kind": { "type": "string", "enum": ["list", "autocomplete"] },
+        "method": { "type": "string", "enum": ["GET"] },
+        "path": { "type": "string" },
+        "pathTemplate": { "type": "string", "description": "e.g. /search?q={searchTerm}" },
+        "responseMapping": {
+          "type": "object",
+          "description": "For operations that return items (list/autocomplete); optionLabelPath/optionValuePath depend on operation kind.",
+          "properties": {
+            "optionLabelPath": { "type": "string", "description": "JSON path in response item for display (e.g. name)." },
+            "optionValuePath": { "type": "string", "description": "JSON path in response item for value to store (e.g. id)." },
+            "itemsPath": { "type": "string", "description": "JSON path to array in response, e.g. data.items." }
+          }
+        }
+      }
+    },
+    "DataSourceOperationRestWrite": {
+      "type": "object",
+      "description": "REST write (POST/PUT/PATCH/DELETE); no responseMapping.",
+      "required": ["id", "method", "path"],
+      "properties": {
+        "id": { "type": "string" },
+        "displayName": { "type": "string" },
+        "method": { "type": "string", "enum": ["POST", "PUT", "PATCH", "DELETE"] },
+        "path": { "type": "string" }
+      }
+    },
+    "DataSourceOperationDatabase": {
+      "type": "object",
+      "description": "Database read; optional responseMapping when returning rows for list/autocomplete.",
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string" },
+        "displayName": { "type": "string" },
+        "kind": { "type": "string", "enum": ["query", "table"] },
+        "query": { "type": "string" },
+        "table": { "type": "string" },
+        "responseMapping": {
+          "type": "object",
+          "properties": {
+            "optionLabelPath": { "type": "string" },
+            "optionValuePath": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

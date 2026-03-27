@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>MigrationRunner</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentMigrator.Runner.Postgres" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Npgsql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Product\Tenant\Tenant.Migrations\Tenant.Migrations.csproj" />
+    <ProjectReference Include="..\Product\TenantApplication\TenantApplication.Migrations\TenantApplication.Migrations.csproj" />
+    <ProjectReference Include="..\Product\Identity\Identity.Migrations\Identity.Migrations.csproj" />
+    <ProjectReference Include="..\Product\User\User.Migrations\User.Migrations.csproj" />
+    <ProjectReference Include="..\Product\Feature\Feature.Migrations\Feature.Migrations.csproj" />
+    <ProjectReference Include="..\Product\AppBuilder\AppBuilder.Migrations\AppBuilder.Migrations.csproj" />
+    <ProjectReference Include="..\Product\Tenant\Tenant.Module\Tenant.Module.csproj" />
+    <ProjectReference Include="..\Product\TenantApplication\TenantApplication.Module\TenantApplication.Module.csproj" />
+    <ProjectReference Include="..\Product\Identity\Identity.Module\Identity.Module.csproj" />
+    <ProjectReference Include="..\Product\User\User.Module\User.Module.csproj" />
+    <ProjectReference Include="..\Product\Feature\Feature.Module\Feature.Module.csproj" />
+    <ProjectReference Include="..\Product\AppBuilder\AppBuilder.Module\AppBuilder.Module.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/defs/PersistenceDefinition.json",
+  "$defs": {
+    "PersistenceDefinition": {
+      "type": "object",
+      "properties": {
+        "databaseProvider": { "type": "string", "enum": ["postgres", "sqlserver", "mysql"], "default": "postgres" },
+        "namingStrategy": { "type": "string", "enum": ["snake_case", "PascalCase", "camelCase"], "default": "snake_case" },
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["entity", "tableName"],
+            "properties": {
+              "entity": { "type": "string" },
+              "tableName": { "type": "string" },
+              "indexes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["properties"],
+                  "properties": {
+                    "properties": { "type": "array", "items": { "type": "string" } },
+                    "unique": { "type": "boolean", "default": false }
+                  }
+                }
+              },
+              "properties": { "type": "object", "additionalProperties": { "type": "string" } }
+            }
+          }
+        }
+      }
+    }
+  }
+}

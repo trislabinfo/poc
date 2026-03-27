@@ -1,0 +1,12 @@
+[
+  { "id": "10000000-0000-0000-0000-000000000001", "name": "users.read", "resource": "users", "action": "read" },
+  { "id": "10000000-0000-0000-0000-000000000002", "name": "users.create", "resource": "users", "action": "create" },
+  { "id": "10000000-0000-0000-0000-000000000003", "name": "users.update", "resource": "users", "action": "update" },
+  { "id": "10000000-0000-0000-0000-000000000004", "name": "users.delete", "resource": "users", "action": "delete" },
+  { "id": "10000000-0000-0000-0000-000000000011", "name": "roles.read", "resource": "roles", "action": "read" },
+  { "id": "10000000-0000-0000-0000-000000000012", "name": "roles.create", "resource": "roles", "action": "create" },
+  { "id": "10000000-0000-0000-0000-000000000013", "name": "roles.update", "resource": "roles", "action": "update" },
+  { "id": "10000000-0000-0000-0000-000000000014", "name": "roles.delete", "resource": "roles", "action": "delete" },
+  { "id": "10000000-0000-0000-0000-000000000021", "name": "permissions.read", "resource": "permissions", "action": "read" },
+  { "id": "10000000-0000-0000-0000-000000000022", "name": "permissions.assign", "resource": "permissions", "action": "assign" }
+]

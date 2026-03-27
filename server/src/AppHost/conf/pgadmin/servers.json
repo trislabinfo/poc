@@ -1,0 +1,14 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Datarizen Dev",
+      "Group": "Servers",
+      "Host": "dr-development-db",
+      "Port": 5432,
+      "MaintenanceDB": "dr-development",
+      "Username": "datarizen",
+      "PassFile": "/tmp/pgpass",
+      "SSLMode": "prefer"
+    }
+  }
+}

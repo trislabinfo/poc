@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/defs/ExtensionReference.json",
+  "$defs": {
+    "ExtensionEntityPropertyAddition": {
+      "type": "object",
+      "description": "Additional properties to append to an extension entity. Entity id is the extension's local entity id (e.g. Employee). At merge time these properties are appended to the namespaced entity.",
+      "required": ["entityId", "properties"],
+      "additionalProperties": false,
+      "properties": {
+        "entityId": { "type": "string", "description": "Extension entity id (e.g. Employee). Must exist in the extension." },
+        "properties": {
+          "type": "array",
+          "items": { "$ref": "EntityDefinition.json#/$defs/PropertyDefinition" },
+          "description": "Property definitions to add to this entity."
+        }
+      }
+    },
+    "ExtensionPageOverride": {
+      "type": "object",
+      "description": "Override or extend an extension page. Page id is the extension's local page id. Only listed properties are applied; at merge time they are merged with the extension page (e.g. fieldOverrides appended, listConfig merged or replaced per platform rules).",
+      "required": ["pageId"],
+      "additionalProperties": false,
+      "properties": {
+        "pageId": { "type": "string", "description": "Extension page id (e.g. EmployeeEdit). Must exist in the extension." },
+        "fieldOverrides": {
+          "type": "array",
+          "items": { "$ref": "LayoutNode.json#/$defs/FieldOverride" },
+          "description": "Additional or overriding field overrides for this page."
+        },
+        "listConfig": {
+          "$ref": "LayoutNode.json#/$defs/ListConfig",
+          "description": "List config override for list pages (columns, filterFields, quickSearchFields, defaultSort, pageSize)."
+        }
+      }
+    },
+    "ExtensionReferenceOverrides": {
+      "type": "object",
+      "description": "Optional overrides applied when merging this extension. All properties are explicit; no additionalProperties.",
+      "additionalProperties": false,
+      "properties": {
+        "entityPropertyAdditions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/ExtensionEntityPropertyAddition" },
+          "description": "Additional properties to add to extension entities (e.g. height, weight on Employee)."
+        },
+        "pageOverrides": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/ExtensionPageOverride" },
+          "description": "Overrides for extension pages (fieldOverrides, listConfig)."
+        }
+      }
+    },
+    "ExtensionReference": {
+      "type": "object",
+      "description": "Reference to an extension from the extension catalog. Resolved at load time; resolved extension content is merged into the effective application definition with namespacing (extensionId.id). Optional overrides extend or override extension entities and pages.",
+      "required": ["extensionId", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "extensionId": { "type": "string", "description": "Extension identifier (e.g. employee, hunting). Must match the extension's id." },
+        "version": { "$ref": "../../Common/SemanticVersionDefinition.json#/$defs/SemanticVersionOrRange" },
+        "source": {
+          "type": "string",
+          "description": "Optional URL, file path, or registry key to resolve the extension JSON. If omitted, resolution uses the extension catalog/registry keyed by extensionId and version."
+        },
+        "overrides": {
+          "$ref": "#/$defs/ExtensionReferenceOverrides",
+          "description": "Optional entity and page overrides (e.g. add properties to extension entities, override page fieldOverrides or listConfig)."
+        }
+      }
+    }
+  }
+}

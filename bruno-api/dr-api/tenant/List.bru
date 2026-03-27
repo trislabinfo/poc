@@ -1,0 +1,31 @@
+meta {
+  name: List
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://localhost:8443/api/tenant/tenant
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "Name":"DataRizenTenant",
+    "Slug":"DRSlug",
+    "Users":[
+      {
+        "Email":"hello@dr.com",
+        "DisplayName":"Mr. Hello",
+        "Password": "NotSavedIdDb!1",
+        "IsTenantOwner": true
+      }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

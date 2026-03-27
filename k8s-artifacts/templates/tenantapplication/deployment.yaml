@@ -1,0 +1,45 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "tenantapplication-deployment"
+  labels:
+    app.kubernetes.io/name: "datarizen"
+    app.kubernetes.io/component: "tenantapplication"
+    app.kubernetes.io/instance: "{{.Release.Name}}"
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "datarizen"
+        app.kubernetes.io/component: "tenantapplication"
+        app.kubernetes.io/instance: "{{.Release.Name}}"
+    spec:
+      containers:
+        - image: "{{ .Values.parameters.tenantapplication.tenantapplication_image }}"
+          name: "tenantapplication"
+          envFrom:
+            - configMapRef:
+                name: "tenantapplication-config"
+            - secretRef:
+                name: "tenantapplication-secrets"
+          ports:
+            - name: "tenantapp-http"
+              protocol: "TCP"
+              containerPort: 61032
+            - name: "tenantapp-https"
+              protocol: "TCP"
+              containerPort: 61031
+          imagePullPolicy: "IfNotPresent"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "datarizen"
+      app.kubernetes.io/component: "tenantapplication"
+      app.kubernetes.io/instance: "{{.Release.Name}}"
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: "RollingUpdate"

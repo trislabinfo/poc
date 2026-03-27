@@ -1,0 +1,25 @@
+meta {
+  name: Create
+  type: http
+  seq: 2
+}
+
+post {
+  url: https://localhost:8443/api/appbuilder/application-definitions
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name":"crm",
+    "description":"crm desc",
+    "slug":"crm",
+    "ispublic":true
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

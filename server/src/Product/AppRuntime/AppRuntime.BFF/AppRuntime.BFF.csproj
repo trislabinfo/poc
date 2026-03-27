@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>AppRuntime.BFF</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Kernel\BuildingBlocks.Kernel.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Api\BuildingBlocks.Api.csproj" />
+    <ProjectReference Include="..\..\TenantApplication\TenantApplication.Application\TenantApplication.Application.csproj" />
+    <ProjectReference Include="..\..\AppBuilder\AppBuilder.Application\AppBuilder.Application.csproj" />
+    <ProjectReference Include="..\AppRuntime.Contracts\AppRuntime.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

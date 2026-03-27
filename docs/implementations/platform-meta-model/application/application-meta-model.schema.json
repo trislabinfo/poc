@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model.json",
+  "title": "Platform Meta Model (Platform Definition)",
+  "description": "Schema for the no-code platform meta model. Platform definition (application definition): entity, navigation, page, role, permission, workflow, and theme definitions can only be defined inside an application definition.",
+  "type": "object",
+  "required": ["application"],
+  "properties": {
+    "application": { "$ref": "defs/ApplicationDefinition.json#/$defs/ApplicationDefinition" },
+    "persistence": { "$ref": "defs/PersistenceDefinition.json#/$defs/PersistenceDefinition" }
+  }
+}

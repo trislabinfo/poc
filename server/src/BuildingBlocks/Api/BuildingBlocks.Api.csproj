@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- Prevent obj/bin collisions with the sibling BuildingBlocks.Web project. -->
+    <IntermediateOutputPath>obj\$(MSBuildProjectName)\</IntermediateOutputPath>
+    <OutputPath>bin\$(MSBuildProjectName)\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Application\BuildingBlocks.Application.csproj" />
+    <ProjectReference Include="..\Contracts\BuildingBlocks.Contracts.csproj" />
+    <ProjectReference Include="..\Infrastructure\BuildingBlocks.Infrastructure.csproj" />
+    <ProjectReference Include="..\Kernel\BuildingBlocks.Kernel.csproj" />
+  </ItemGroup>
+
+  <!-- Frontend contracts live under the same folder in a separate project. -->
+  <ItemGroup>
+    <Compile Remove="Frontend\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.NpgSql" />
+    <PackageReference Include="AspNetCore.HealthChecks.Redis" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+  </ItemGroup>
+
+</Project>
+

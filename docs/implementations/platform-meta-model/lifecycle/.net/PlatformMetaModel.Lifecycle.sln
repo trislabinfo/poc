@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11505.172 d18.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformMetaModel.Lifecycle", "PlatformMetaModel.Lifecycle.csproj", "{7810428A-FC8E-13D9-22D2-4EB9A40B2160}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7810428A-FC8E-13D9-22D2-4EB9A40B2160}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7810428A-FC8E-13D9-22D2-4EB9A40B2160}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7810428A-FC8E-13D9-22D2-4EB9A40B2160}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7810428A-FC8E-13D9-22D2-4EB9A40B2160}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {287556B2-920D-4862-897E-2E6F06DF0661}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/defs/RoleDefinition.json",
+  "$defs": {
+    "RoleDefinition": {
+      "type": "object",
+      "description": "Role definition; defined only inside application definition.",
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "inherits": { "type": "array", "items": { "type": "string" } },
+        "tenantScoped": { "type": "boolean", "default": false }
+      }
+    }
+  }
+}

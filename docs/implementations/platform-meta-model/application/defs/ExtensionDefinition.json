@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/defs/ExtensionDefinition.json",
+  "$defs": {
+    "ExtensionDependency": {
+      "type": "object",
+      "description": "Declared dependency on another extension. Enables cross-extension references using namespaced ids (otherExtensionId.entityId). Load order is topological; cycles are rejected.",
+      "required": ["extensionId", "version"],
+      "properties": {
+        "extensionId": { "type": "string" },
+        "version": { "$ref": "../../Common/SemanticVersionDefinition.json#/$defs/SemanticVersionOrRange" }
+      }
+    },
+    "ExtensionDefinition": {
+      "allOf": [
+        { "$ref": "CommonPropertiesDefinition.json#/$defs/CommonPropertiesDefinition" },
+        {
+          "type": "object",
+          "description": "Application extension: reusable bundle of entities, pages, navigation, workflows, roles, permissions, etc. Can be defined inside an application definition (extensionDefinitions) and released to the extension catalog. Authored with local ids; at merge time the platform namespaces all ids as extensionId.id. Data sources define structure only; connection/authentication supplied by the application or environment.",
+          "required": ["id", "name", "version"],
+          "properties": {
+            "id": { "type": "string", "description": "Unique extension identifier; used as namespace prefix when merged (e.g. employee)." },
+            "name": { "type": "string", "description": "Human-readable name." },
+            "version": { "$ref": "../../Common/SemanticVersionDefinition.json#/$defs/SemanticVersion" },
+            "dependsOn": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/ExtensionDependency" },
+              "description": "Other extensions this extension references. Loaded first; cycles rejected."
+            }
+          }
+        }
+      ]
+    }
+  }
+}

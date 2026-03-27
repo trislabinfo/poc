@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>AppBuilder.Application</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Application\BuildingBlocks.Application.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Kernel\BuildingBlocks.Kernel.csproj" />
+    <ProjectReference Include="..\..\..\Framework\AppDefinition\AppDefinition.Application\AppDefinition.Application.csproj" />
+    <ProjectReference Include="..\..\..\Framework\AppDefinition\AppDefinition.Contracts\AppDefinition.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Framework\AppDefinition\AppDefinition.Domain\AppDefinition.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Framework\Generators\ArtifactGenerator\ArtifactGenerator.csproj" />
+    <ProjectReference Include="..\..\..\Framework\Generators\DatabaseSchemaGenerator\DatabaseSchemaGenerator.csproj" />
+    <ProjectReference Include="..\AppBuilder.Domain\AppBuilder.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Capabilities\Messaging\Capabilities.Messaging.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+  </ItemGroup>
+
+</Project>

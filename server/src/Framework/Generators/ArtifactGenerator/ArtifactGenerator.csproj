@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>AppDefinition.HtmlGeneration</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\AppDefinition\AppDefinition.Contracts\AppDefinition.Contracts.csproj" />
+    <ProjectReference Include="..\..\AppDefinition\AppDefinition.Domain\AppDefinition.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

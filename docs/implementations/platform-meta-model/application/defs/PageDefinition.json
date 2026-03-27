@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/defs/PageDefinition.json",
+  "$defs": {
+    "PageDefinition": {
+      "type": "object",
+      "description": "Page definition; defined only inside application definition.",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["EntityList", "EntityEdit", "Custom"] },
+        "entity": { "type": "string", "description": "Entity ID for entity-based pages." },
+        "layout": { "$ref": "LayoutNode.json#/$defs/LayoutNode", "description": "Root layout node." },
+        "listConfig": { "$ref": "LayoutNode.json#/$defs/ListConfig" },
+        "fieldOverrides": {
+          "type": "array",
+          "items": { "$ref": "LayoutNode.json#/$defs/FieldOverride" }
+        },
+        "permissions": {
+          "type": "object",
+          "properties": {
+            "allowedRoles": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    }
+  }
+}

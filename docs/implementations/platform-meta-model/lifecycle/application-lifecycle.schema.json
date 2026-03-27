@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/lifecycle/application-lifecycle.json",
+  "title": "Application Lifecycle Schema",
+  "description": "Schema for application lifecycle, catalog, tenant application, environment, and deployment. Use alongside the application meta model: definition content validates against the application meta model; lifecycle artifacts validate against this schema.",
+  "type": "object",
+  "properties": {
+    "applicationRelease": {
+      "$ref": "defs/ApplicationReleaseDefinition.json#/$defs/ApplicationReleaseDefinition",
+      "description": "Single application release (platform)."
+    },
+    "applicationCatalog": {
+      "type": "array",
+      "items": { "$ref": "defs/ApplicationCatalogDefinition.json#/$defs/ApplicationCatalogDefinition" },
+      "description": "Application catalog: installable applications (entries offered to tenants)."
+    },
+    "tenantApplication": {
+      "$ref": "defs/TenantApplicationDefinition.json#/$defs/TenantApplicationDefinition",
+      "description": "Tenant application instance (installed from catalog, from scratch, or modified)."
+    },
+    "tenantApplicationRelease": {
+      "$ref": "defs/TenantApplicationReleaseDefinition.json#/$defs/TenantApplicationReleaseDefinition",
+      "description": "Tenant application release snapshot."
+    },
+    "environment": {
+      "$ref": "defs/EnvironmentDefinition.json#/$defs/EnvironmentDefinition",
+      "description": "Tenant application environment (dev, staging, prod)."
+    },
+    "deploy": {
+      "$ref": "defs/DeployDefinition.json#/$defs/DeployDefinition",
+      "description": "Deployment of a tenant app release to an environment."
+    },
+    "extensionRelease": {
+      "$ref": "defs/ExtensionReleaseDefinition.json#/$defs/ExtensionReleaseDefinition",
+      "description": "Single extension release (created when releasing extensions from an application; added to extension catalog)."
+    },
+    "extensionCatalog": {
+      "type": "array",
+      "items": { "$ref": "defs/ExtensionCatalogDefinition.json#/$defs/ExtensionCatalogEntryDefinition" },
+      "description": "Extension catalog: entries offered for applications to reference (extensionReferences)."
+    }
+  }
+}

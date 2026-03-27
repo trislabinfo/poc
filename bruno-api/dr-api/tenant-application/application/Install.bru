@@ -1,0 +1,24 @@
+meta {
+  name: Install
+  type: http
+  seq: 2
+}
+
+post {
+  url: https://localhost:8443/api/tenantapplication/tenants/d1f410e2-4782-4e4a-9eb2-3710a8164ea2/applications/install
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "ApplicationReleaseId":"4251ef9d-ce16-44e1-a340-ca3da697f75d",
+    "Name":"tenant-crm",
+    "Slug":"crm"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

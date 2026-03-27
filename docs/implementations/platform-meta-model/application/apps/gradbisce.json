@@ -1,0 +1,169 @@
+{
+  "application": {
+    "id": "gradbisce",
+    "name": "Gradbišče",
+    "version": "1.0.0",
+    "multiTenant": true,
+    "createdBy": "system",
+    "createdAt": "2025-01-01T00:00:00Z",
+    "extensionReferences": [
+      {
+        "extensionId": "oseba",
+        "version": "1.0.0"
+      }
+    ],
+    "entities": [
+      {
+        "id": "Zaposlen",
+        "displayName": "Zaposlen",
+        "tenantScoped": true,
+        "properties": [
+          { "name": "stevilka_noge", "type": "int" },
+          { "name": "stevilka_oblacila", "type": "string" }
+        ],
+        "relations": [
+          { "name": "oseba", "type": "many-to-one", "target": "oseba.Oseba", "required": true }
+        ]
+      },
+      {
+        "id": "Investitor",
+        "displayName": "Investitor",
+        "tenantScoped": true,
+        "properties": [],
+        "relations": [
+          { "name": "oseba", "type": "many-to-one", "target": "oseba.Oseba", "required": true }
+        ]
+      },
+      {
+        "id": "Gradbisce",
+        "displayName": "Gradbišče",
+        "tenantScoped": true,
+        "properties": [
+          { "name": "naziv", "type": "string", "required": true },
+          { "name": "lokacija", "type": "string" }
+        ],
+        "relations": [
+          { "name": "investitor", "type": "many-to-one", "target": "Investitor" }
+        ]
+      }
+    ],
+    "pages": [
+      {
+        "id": "ZaposleniList",
+        "type": "EntityList",
+        "entity": "Zaposlen",
+        "listConfig": {
+          "columns": ["oseba", "stevilka_noge", "stevilka_oblacila"],
+          "defaultSort": [{ "field": "stevilka_oblacila", "direction": "asc" }]
+        }
+      },
+      {
+        "id": "ZaposlenEdit",
+        "type": "EntityEdit",
+        "entity": "Zaposlen",
+        "layout": {
+          "id": "s1",
+          "type": "Section",
+          "title": "Podatki zaposlenega",
+          "children": [
+            {
+              "id": "r1",
+              "type": "Row",
+              "columns": 1,
+              "children": [
+                { "id": "f1", "type": "Field", "field": "oseba", "componentId": "TextInput" },
+                { "id": "f2", "type": "Field", "field": "stevilka_noge", "componentId": "NumberInput" },
+                { "id": "f3", "type": "Field", "field": "stevilka_oblacila", "componentId": "Select" }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "InvestitorjiList",
+        "type": "EntityList",
+        "entity": "Investitor",
+        "listConfig": {
+          "columns": ["oseba"],
+          "defaultSort": []
+        }
+      },
+      {
+        "id": "InvestitorEdit",
+        "type": "EntityEdit",
+        "entity": "Investitor",
+        "layout": {
+          "id": "s1",
+          "type": "Section",
+          "title": "Podatki investitorja",
+          "children": [
+            {
+              "id": "r1",
+              "type": "Row",
+              "columns": 1,
+              "children": [
+                { "id": "f1", "type": "Field", "field": "oseba", "componentId": "TextInput" }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "GradbiscaList",
+        "type": "EntityList",
+        "entity": "Gradbisce",
+        "listConfig": {
+          "columns": ["naziv", "lokacija", "investitor"],
+          "defaultSort": [{ "field": "naziv", "direction": "asc" }]
+        }
+      },
+      {
+        "id": "GradbisceEdit",
+        "type": "EntityEdit",
+        "entity": "Gradbisce",
+        "layout": {
+          "id": "s1",
+          "type": "Section",
+          "title": "Podatki gradišča",
+          "children": [
+            {
+              "id": "r1",
+              "type": "Row",
+              "columns": 1,
+              "children": [
+                { "id": "f1", "type": "Field", "field": "naziv", "componentId": "TextInput" },
+                { "id": "f2", "type": "Field", "field": "lokacija", "componentId": "TextInput" },
+                { "id": "f3", "type": "Field", "field": "investitor", "componentId": "TextInput" }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "navigation": [
+      {
+        "id": "main",
+        "type": "sidebarLeft",
+        "item": [
+          { "id": "nav-zaposleni", "label": "Zaposleni", "page": "ZaposleniList" },
+          { "id": "nav-investitorji", "label": "Investitorji", "page": "InvestitorjiList" },
+          { "id": "nav-gradbisca", "label": "Gradbišča", "page": "GradbiscaList" }
+        ]
+      }
+    ],
+    "workflows": [],
+    "roles": [],
+    "permissions": [],
+    "codeTables": [],
+    "dataSources": [],
+    "defaultLocale": "sl",
+    "supportedLocales": ["sl"],
+    "translations": {
+      "sl": {
+        "nav.zaposleni": "Zaposleni",
+        "nav.investitorji": "Investitorji",
+        "nav.gradbisca": "Gradbišča"
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>ApiGateway</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(DATARIZEN_ASPIRE_RUN_ID)' != ''">
+    <BaseOutputPath>..\..\artifacts\aspire\$(DATARIZEN_ASPIRE_RUN_ID)\$(MSBuildProjectName)\bin\</BaseOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Yarp.ReverseProxy" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ServiceDefaults\ServiceDefaults.csproj" />
+  </ItemGroup>
+
+</Project>

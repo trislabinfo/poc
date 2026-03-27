@@ -1,0 +1,32 @@
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "identity-service"
+  labels:
+    app.kubernetes.io/name: "datarizen"
+    app.kubernetes.io/component: "identity"
+    app.kubernetes.io/instance: "{{.Release.Name}}"
+spec:
+  type: "ClusterIP"
+  selector:
+    app.kubernetes.io/name: "datarizen"
+    app.kubernetes.io/component: "identity"
+    app.kubernetes.io/instance: "{{.Release.Name}}"
+  ports:
+    - name: "http"
+      protocol: "TCP"
+      port: "{{ .Values.parameters.identity.port_http }}"
+      targetPort: "{{ .Values.parameters.identity.port_http }}"
+    - name: "https"
+      protocol: "TCP"
+      port: "{{ .Values.parameters.identity.port_https }}"
+      targetPort: "{{ .Values.parameters.identity.port_https }}"
+    - name: "identityHttp"
+      protocol: "TCP"
+      port: 61002
+      targetPort: 61002
+    - name: "identityHttps"
+      protocol: "TCP"
+      port: 61001
+      targetPort: 61001

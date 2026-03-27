@@ -1,0 +1,11 @@
+---
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: "dr-development-messaging-config"
+  labels:
+    app.kubernetes.io/name: "datarizen"
+    app.kubernetes.io/component: "dr-development-messaging"
+    app.kubernetes.io/instance: "{{.Release.Name}}"
+data:
+  RABBITMQ_DEFAULT_USER: "{{ .Values.config.dr_development_messaging.RABBITMQ_DEFAULT_USER }}"

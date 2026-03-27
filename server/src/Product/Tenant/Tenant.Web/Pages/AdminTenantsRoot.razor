@@ -1,0 +1,10 @@
+@page "/admin/tenants"
+@inject NavigationManager NavigationManager
+
+@code {
+    protected override void OnInitialized()
+    {
+        NavigationManager.NavigateTo("/admin/tenants/search");
+    }
+}
+

@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>MultiAppControlPanelHost</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(DATARIZEN_ASPIRE_RUN_ID)' != ''">
+    <BaseOutputPath>..\..\..\artifacts\aspire\$(DATARIZEN_ASPIRE_RUN_ID)\$(MSBuildProjectName)\bin\</BaseOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\Api\BuildingBlocks.Api.csproj" />
+    <ProjectReference Include="..\..\Product\Tenant\Tenant.Module\Tenant.Module.csproj" />
+    <ProjectReference Include="..\..\Product\Tenant\Tenant.Api\Tenant.Api.csproj" />
+    <ProjectReference Include="..\..\Product\Identity\Identity.Module\Identity.Module.csproj" />
+    <ProjectReference Include="..\..\Product\Identity\Identity.Api\Identity.Api.csproj" />
+    <ProjectReference Include="..\..\Product\User\User.Module\User.Module.csproj" />
+    <ProjectReference Include="..\..\Product\User\User.Api\User.Api.csproj" />
+    <ProjectReference Include="..\..\Product\Feature\Feature.Module\Feature.Module.csproj" />
+    <ProjectReference Include="..\..\Product\Feature\Feature.Api\Feature.Api.csproj" />
+    <ProjectReference Include="..\..\Product\TenantApplication\TenantApplication.Application\TenantApplication.Application.csproj" />
+    <ProjectReference Include="..\..\Product\TenantApplication\TenantApplication.Module\TenantApplication.Module.csproj" />
+    <ProjectReference Include="..\..\Product\TenantApplication\TenantApplication.Api\TenantApplication.Api.csproj" />
+    <ProjectReference Include="..\..\Product\AppBuilder\AppBuilder.Application\AppBuilder.Application.csproj" />
+    <ProjectReference Include="..\..\Product\AppBuilder\AppBuilder.Module\AppBuilder.Module.csproj" />
+    <ProjectReference Include="..\..\Product\AppBuilder\AppBuilder.Api\AppBuilder.Api.csproj" />
+    <ProjectReference Include="..\..\Capabilities\MultiTenancy\Capabilities.MultiTenancy.csproj" />
+    <ProjectReference Include="..\..\Capabilities\Authentication\Capabilities.Authentication.csproj" />
+    <ProjectReference Include="..\..\Capabilities\Authorization\Capabilities.Authorization.csproj" />
+    <ProjectReference Include="..\..\Capabilities\Auditing\Capabilities.Auditing.csproj" />
+    <ProjectReference Include="..\..\Capabilities\FeatureFlags\Capabilities.FeatureFlags.csproj" />
+    <ProjectReference Include="..\..\Capabilities\Messaging\Capabilities.Messaging.csproj" />
+    <ProjectReference Include="..\..\ServiceDefaults\ServiceDefaults.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+  </ItemGroup>
+
+</Project>

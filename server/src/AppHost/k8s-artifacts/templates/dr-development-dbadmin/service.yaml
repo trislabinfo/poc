@@ -1,0 +1,20 @@
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "dr-development-dbadmin-service"
+  labels:
+    app.kubernetes.io/name: "datarizen"
+    app.kubernetes.io/component: "dr-development-dbadmin"
+    app.kubernetes.io/instance: "{{.Release.Name}}"
+spec:
+  type: "ClusterIP"
+  selector:
+    app.kubernetes.io/name: "datarizen"
+    app.kubernetes.io/component: "dr-development-dbadmin"
+    app.kubernetes.io/instance: "{{.Release.Name}}"
+  ports:
+    - name: "http"
+      protocol: "TCP"
+      port: 80
+      targetPort: 80

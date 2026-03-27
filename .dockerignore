@@ -1,0 +1,76 @@
+# .dockerignore - Exclude unnecessary files from Docker build context
+# This improves build performance and reduces image size
+
+# Build artifacts
+**/bin/
+**/obj/
+**/artifacts/
+**/out/
+**/publish/
+
+# IDE files
+**/.vs/
+**/.vscode/
+**/.idea/
+**/*.user
+**/*.suo
+**/*.sln.docstates
+
+# Test results
+**/TestResults/
+**/test-results/
+**/*.trx
+**/*.coverage
+
+# Documentation (not needed in container)
+**/docs/
+**/*.md
+!**/README.md
+
+# Git
+**/.git/
+**/.gitignore
+**/.gitattributes
+
+# Docker files themselves
+**/Dockerfile*
+**/.dockerignore
+**/docker-compose*.yml
+
+# CI/CD
+**/.github/
+**/.azure/
+**/.gitlab-ci.yml
+**/azure-pipelines.yml
+
+# Logs
+**/*.log
+**/logs/
+
+# Temporary files
+**/tmp/
+**/temp/
+**/*.tmp
+**/*.cache
+
+# OS files
+**/.DS_Store
+**/Thumbs.db
+**/desktop.ini
+
+# Node modules (if any)
+**/node_modules/
+**/package-lock.json
+**/yarn.lock
+
+# NuGet packages (will be restored)
+**/packages/
+**/*.nupkg
+
+# Scripts (not needed in container)
+**/scripts/
+!**/scripts/build-images.ps1
+
+# Migration files (if not needed at runtime)
+# Uncomment if migrations run separately
+# **/Migrations/

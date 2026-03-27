@@ -1,0 +1,15 @@
+---
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: "dr-development-dbadmin-config"
+  labels:
+    app.kubernetes.io/name: "datarizen"
+    app.kubernetes.io/component: "dr-development-dbadmin"
+    app.kubernetes.io/instance: "{{.Release.Name}}"
+data:
+  PGADMIN_DEFAULT_EMAIL: "{{ .Values.config.dr_development_dbadmin.PGADMIN_DEFAULT_EMAIL }}"
+  PGADMIN_DEFAULT_PASSWORD: "{{ .Values.config.dr_development_dbadmin.PGADMIN_DEFAULT_PASSWORD }}"
+  PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "{{ .Values.config.dr_development_dbadmin.PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED }}"
+  PGADMIN_REPLACE_SERVERS_ON_STARTUP: "{{ .Values.config.dr_development_dbadmin.PGADMIN_REPLACE_SERVERS_ON_STARTUP }}"
+  DATARIZEN_PG_HOST: "{{ .Values.config.dr_development_dbadmin.DATARIZEN_PG_HOST }}"

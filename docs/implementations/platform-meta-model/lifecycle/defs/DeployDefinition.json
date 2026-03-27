@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/lifecycle/defs/DeployDefinition.json",
+  "$defs": {
+    "DeployDefinition": {
+      "type": "object",
+      "description": "Deployment of a tenant application release to an environment.",
+      "required": ["id", "tenantApplicationReleaseId", "environmentId", "status"],
+      "properties": {
+        "id": { "type": "string", "description": "Unique deployment identifier." },
+        "tenantApplicationReleaseId": {
+          "type": "string",
+          "description": "Tenant application release being deployed."
+        },
+        "environmentId": { "type": "string", "description": "Target environment." },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "inProgress", "succeeded", "failed"],
+          "description": "Deployment status."
+        },
+        "deployedAt": { "type": "string", "format": "date-time", "description": "When deployment completed (for succeeded)." },
+        "artifactRef": { "type": "string", "description": "Optional reference to compiled artifact (e.g. storage path or build id)." }
+      }
+    }
+  }
+}

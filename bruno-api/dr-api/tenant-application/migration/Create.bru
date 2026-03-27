@@ -1,0 +1,22 @@
+meta {
+  name: Create
+  type: http
+  seq: 1
+}
+
+post {
+  url: https://localhost:8443/api/tenantapplication/tenants/d1f410e2-4782-4e4a-9eb2-3710a8164ea2/applications/28060268-67b5-49a1-8c5f-322611ca86f0/environments/7c78b320-27b0-4424-8e8b-ea0cbb4c9228/migrations
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "ToReleaseId":"84aacb1a-745c-443d-863c-da541bc95b18"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

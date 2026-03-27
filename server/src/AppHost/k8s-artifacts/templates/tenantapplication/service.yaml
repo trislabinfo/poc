@@ -1,0 +1,32 @@
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "tenantapplication-service"
+  labels:
+    app.kubernetes.io/name: "datarizen"
+    app.kubernetes.io/component: "tenantapplication"
+    app.kubernetes.io/instance: "{{.Release.Name}}"
+spec:
+  type: "ClusterIP"
+  selector:
+    app.kubernetes.io/name: "datarizen"
+    app.kubernetes.io/component: "tenantapplication"
+    app.kubernetes.io/instance: "{{.Release.Name}}"
+  ports:
+    - name: "http"
+      protocol: "TCP"
+      port: "{{ .Values.parameters.tenantapplication.port_http }}"
+      targetPort: "{{ .Values.parameters.tenantapplication.port_http }}"
+    - name: "https"
+      protocol: "TCP"
+      port: "{{ .Values.parameters.tenantapplication.port_https }}"
+      targetPort: "{{ .Values.parameters.tenantapplication.port_https }}"
+    - name: "tenantapplicationHttp"
+      protocol: "TCP"
+      port: 61032
+      targetPort: 61032
+    - name: "tenantapplicationHttps"
+      protocol: "TCP"
+      port: 61031
+      targetPort: 61031

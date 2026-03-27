@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>AppBuilderServiceHost</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(DATARIZEN_ASPIRE_RUN_ID)' != ''">
+    <BaseOutputPath>..\..\..\artifacts\aspire\$(DATARIZEN_ASPIRE_RUN_ID)\$(MSBuildProjectName)\bin\</BaseOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\Api\BuildingBlocks.Api.csproj" />
+    <ProjectReference Include="..\..\Product\AppBuilder\AppBuilder.Module\AppBuilder.Module.csproj" />
+    <ProjectReference Include="..\..\Product\AppBuilder\AppBuilder.Api\AppBuilder.Api.csproj" />
+    <ProjectReference Include="..\..\Capabilities\MultiTenancy\Capabilities.MultiTenancy.csproj" />
+    <ProjectReference Include="..\..\Capabilities\Authentication\Capabilities.Authentication.csproj" />
+    <ProjectReference Include="..\..\Capabilities\Authorization\Capabilities.Authorization.csproj" />
+    <ProjectReference Include="..\..\Capabilities\Auditing\Capabilities.Auditing.csproj" />
+    <ProjectReference Include="..\..\Capabilities\FeatureFlags\Capabilities.FeatureFlags.csproj" />
+    <ProjectReference Include="..\..\Capabilities\Logging\Serilog\Capabilities.Logging.csproj" />
+    <ProjectReference Include="..\..\Capabilities\Messaging\Capabilities.Messaging.csproj" />
+    <ProjectReference Include="..\..\ServiceDefaults\ServiceDefaults.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+  </ItemGroup>
+
+</Project>

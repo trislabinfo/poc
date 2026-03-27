@@ -1,0 +1,44 @@
+# Build outputs
+**/bin/
+**/obj/
+**/out/
+**/TestResults/
+**/*.user
+**/*.suo
+**/*.userosscache
+**/*.sln.docstates
+
+# .NET / Visual Studio / Rider
+.vs/
+.idea/
+*.DotSettings.user
+
+# Logs
+*.log
+
+# OS / editor
+Thumbs.db
+Desktop.ini
+
+# Node / frontend
+**/node_modules/
+**/dist/
+**/.svelte-kit/
+**/.vite/
+**/.npmrc.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env / secrets (never commit)
+**/.env
+**/.env.*
+**/*secrets*.json
+**/appsettings.*.json.user
+# pgAdmin password file (created by setup script)
+**/AppHost/pgpass
+
+# Coverage
+**/coverage/
+

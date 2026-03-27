@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/defs/CodeTableDefinition.json",
+  "$defs": {
+    "CodeTableDefinition": {
+      "type": "object",
+      "description": "Code table definition: reference/lookup data (e.g. statuses, types). Defined only inside application definition.",
+      "required": ["id", "displayName"],
+      "properties": {
+        "id": { "type": "string", "description": "Unique code table identifier." },
+        "displayName": { "type": "string", "description": "Human-readable name." },
+        "tenantScoped": { "type": "boolean", "description": "Whether the code table is tenant-specific.", "default": false },
+        "items": {
+          "type": "array",
+          "description": "Static list of code table rows.",
+          "items": {
+            "type": "object",
+            "required": ["code", "value"],
+            "properties": {
+              "code": { "type": "string", "description": "Code value." },
+              "value": { "type": "string", "description": "Display value." },
+              "sortOrder": { "type": "integer", "description": "Optional sort order." }
+            }
+          }
+        }
+      }
+    }
+  }
+}

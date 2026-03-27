@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/Common/AuditDefinition.json",
+  "$defs": {
+    "AuditDefinition": {
+      "type": "object",
+      "description": "Audit and soft-delete fields: who created/updated (or deleted) and when.",
+      "required": ["createdAt", "createdBy"],
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the record was created."
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "Who created the record (user id, actor id)."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the record was last updated."
+        },
+        "updatedBy": {
+          "type": "string",
+          "description": "Who last updated the record."
+        },
+        "deletedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the record was soft-deleted; absent or null means not deleted."
+        },
+        "deletedBy": {
+          "type": "string",
+          "description": "Who soft-deleted the record."
+        }
+      }
+    }
+  }
+}

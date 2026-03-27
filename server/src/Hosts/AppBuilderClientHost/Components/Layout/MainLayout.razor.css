@@ -1,0 +1,195 @@
+:root {
+    --ab-bg: #0b1220;
+    --ab-panel: rgba(255, 255, 255, 0.04);
+    --ab-panel-border: rgba(255, 255, 255, 0.08);
+    --ab-text: #e5e7eb;
+    --ab-muted: rgba(229, 231, 235, 0.72);
+    --ab-accent: #60a5fa;
+    --ab-accent-2: #34d399;
+}
+
+:global(html),
+:global(body) {
+    margin: 0;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+        "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+.app-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: radial-gradient(1200px circle at 20% 10%, rgba(96, 165, 250, 0.18), transparent 60%),
+        radial-gradient(900px circle at 90% 10%, rgba(52, 211, 153, 0.12), transparent 50%), var(--ab-bg);
+    color: var(--ab-text);
+}
+
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background: rgba(15, 23, 42, 0.82);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+}
+
+.cp-brand {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.cp-brand-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+.cp-brand-subtitle {
+    margin-top: 0.15rem;
+    font-size: 0.9rem;
+    color: var(--ab-muted);
+}
+
+.app-content {
+    flex: 1;
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem;
+}
+
+:global(.cp-sidebar) {
+    width: 240px;
+    background: var(--ab-panel);
+    border: 1px solid var(--ab-panel-border);
+    border-radius: 14px;
+    padding: 0.75rem;
+    height: fit-content;
+}
+
+:global(.cp-nav-title) {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: rgba(229, 231, 235, 0.6);
+    padding: 0.25rem 0.55rem 0.65rem 0.55rem;
+    letter-spacing: 0.08em;
+}
+
+:global(.cp-nav-list) {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+:global(.cp-nav-link) {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0.55rem 0.65rem;
+    border-radius: 12px;
+    color: var(--ab-muted);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease, transform 120ms ease;
+}
+
+:global(.cp-nav-link:hover) {
+    color: var(--ab-text);
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateY(-1px);
+}
+
+:global(.cp-nav-link.active) {
+    color: var(--ab-text);
+    font-weight: 650;
+    background: rgba(96, 165, 250, 0.16);
+    border-left-color: rgba(96, 165, 250, 0.95);
+}
+
+:global(.cp-nav-link-text) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.main-content {
+    flex: 1;
+    min-width: 0;
+}
+
+:global(.cp-page) {
+    padding: 0.25rem;
+}
+
+:global(.cp-card) {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--ab-panel-border);
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+:global(.cp-card-title) {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+:global(.cp-card-subtitle) {
+    margin-top: 0.35rem;
+    color: var(--ab-muted);
+}
+
+:global(.cp-actions) {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+}
+
+:global(.cp-button) {
+    border: 1px solid transparent;
+    border-radius: 12px;
+    padding: 0.6rem 0.85rem;
+    cursor: pointer;
+    color: var(--ab-text);
+    background: rgba(255, 255, 255, 0.06);
+    transition: transform 120ms ease, background-color 120ms ease, border-color 120ms ease;
+}
+
+:global(.cp-button:hover) {
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.09);
+}
+
+:global(.cp-button-primary) {
+    background: rgba(96, 165, 250, 0.22);
+    border-color: rgba(96, 165, 250, 0.35);
+}
+
+:global(.cp-button-primary:hover) {
+    background: rgba(96, 165, 250, 0.28);
+}
+
+:global(.cp-text-muted) {
+    color: var(--ab-muted);
+}
+
+@media (max-width: 900px) {
+    .app-content {
+        padding: 0.85rem;
+    }
+
+    :global(.cp-sidebar) {
+        width: 190px;
+    }
+}
+

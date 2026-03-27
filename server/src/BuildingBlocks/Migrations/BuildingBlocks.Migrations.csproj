@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Datarizen.BuildingBlocks.Migrations</RootNamespace>
+  </PropertyGroup>
+
+  <!-- No external package refs: uses only BCL (System.Text.Json, System.Reflection) -->
+
+</Project>

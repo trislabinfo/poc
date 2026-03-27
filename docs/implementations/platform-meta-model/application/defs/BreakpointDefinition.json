@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/defs/BreakpointDefinition.json",
+  "$defs": {
+    "BreakpointDefinition": {
+      "type": "object",
+      "description": "Viewport breakpoint for responsive layout; referenced by id in layout nodes (visibleFrom, hiddenFrom).",
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "description": "Breakpoint identifier (e.g. small, medium, large, xlarge)." },
+        "minWidth": { "type": "integer", "minimum": 0, "description": "Min viewport width in px. Omit or 0 for smallest breakpoint." },
+        "maxWidth": { "type": "integer", "minimum": 0, "description": "Max viewport width in px. Omit for largest breakpoint (no max)." }
+      }
+    }
+  }
+}

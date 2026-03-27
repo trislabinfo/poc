@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://datarizen.io/schemas/platform-meta-model/defs/CommonPropertiesDefinition.json",
+  "$defs": {
+    "CommonPropertiesDefinition": {
+      "type": "object",
+      "description": "Shared properties used by both ApplicationDefinition and ExtensionDefinition. Entities, pages, navigation, workflows, roles, permissions, code tables, data sources, and locale/translation settings.",
+      "properties": {
+        "entities": {
+          "type": "array",
+          "items": { "$ref": "EntityDefinition.json#/$defs/EntityDefinition" },
+          "description": "Entity definitions (business data structures)."
+        },
+        "pages": {
+          "type": "array",
+          "items": { "$ref": "PageDefinition.json#/$defs/PageDefinition" },
+          "description": "Page definitions (list, edit, custom)."
+        },
+        "navigation": {
+          "type": "array",
+          "items": { "$ref": "NavigationDefinition.json#/$defs/NavigationDefinition" },
+          "description": "Navigation definitions (each defines a navigation type and its item tree)."
+        },
+        "workflows": {
+          "type": "array",
+          "items": { "$ref": "WorkflowDefinition.json#/$defs/WorkflowDefinition" },
+          "description": "Workflow definitions (BPMN-aligned)."
+        },
+        "roles": {
+          "type": "array",
+          "items": { "$ref": "RoleDefinition.json#/$defs/RoleDefinition" },
+          "description": "Role definitions."
+        },
+        "permissions": {
+          "type": "array",
+          "items": { "$ref": "PermissionDefinition.json#/$defs/PermissionDefinition" },
+          "description": "Permission definitions."
+        },
+        "codeTables": {
+          "type": "array",
+          "items": { "$ref": "CodeTableDefinition.json#/$defs/CodeTableDefinition" },
+          "description": "Code table definitions (reference/lookup data)."
+        },
+        "dataSources": {
+          "type": "array",
+          "items": { "$ref": "DataSourceDefinition.json#/$defs/DataSourceDefinition" },
+          "description": "Data source definitions (REST, gRPC, database); operations and response mapping defined inside each."
+        },
+        "defaultLocale": {
+          "type": "string",
+          "description": "Default locale for formatting and translations (e.g. en, sl)."
+        },
+        "supportedLocales": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Optional list of supported locale codes."
+        },
+        "translations": {
+          "type": "object",
+          "description": "Per-locale translation maps. Property names are locale codes (e.g. en, sl); values are key-to-string maps.",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}
